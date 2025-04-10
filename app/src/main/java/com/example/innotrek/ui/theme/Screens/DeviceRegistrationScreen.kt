@@ -33,27 +33,29 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.ui.draw.clip
-
+import com.example.innotrek.Model.Device
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceConfigScreen() {
+fun DeviceConfigScreen(onSaveDevice: (Device) -> Unit,
+ onNavigateBack: () -> Unit ) {
+
     val deviceOptions = listOf("ESP32", "Arduino", "Raspberry Pi", "STM32", "BeagleBone")
     var expanded by remember { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState(deviceOptions[0])
 
     var ipAddress by remember { mutableStateOf("") }
     var port by remember { mutableStateOf("") }
-    var connectionType by remember { mutableStateOf("") } // Wi-Fi or Bluetooth
+    var connectionType by remember { mutableStateOf("") }
     var deviceName by remember { mutableStateOf("") }
     Column(
-        modifier = Modifier.fillMaxSize() // Asegura que la columna ocupe toda la pantalla
+        modifier = Modifier.fillMaxSize()
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth() // Rellena todo el ancho disponible
-                .height(70.dp) // Define una altura fija
+                .fillMaxWidth()
+                .height(70.dp)
                 .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
                 .background(Color(4, 139, 171))
 
@@ -66,7 +68,7 @@ fun DeviceConfigScreen() {
             ) {
 
                 IconButton(
-                    onClick = { /* Acción del ícono de menú */ },
+                    onClick = {onNavigateBack()},
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                 ) {
@@ -100,7 +102,7 @@ fun DeviceConfigScreen() {
         ) {
 
 
-            // Selector de tipo de dispositivo
+
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
@@ -213,8 +215,15 @@ fun DeviceConfigScreen() {
 
             Button(
                 onClick = {
-
-                    println("Dispositivo: ${textFieldState.text}, Conexión: $connectionType, ${if (connectionType == "Wi-Fi") "IP: $ipAddress, Puerto: $port" else "Dispositivo Bluetooth: $deviceName"}")
+                    val device = Device(
+                        type = textFieldState.text.toString(),
+                        connectionType = connectionType,
+                        ipAddress = if (connectionType == "Wi-Fi") ipAddress else null,
+                        port = if (connectionType == "Wi-Fi") port else null,
+                        bluetoothName = if (connectionType == "Bluetooth") deviceName else null
+                    )
+                    onSaveDevice(device)
+                    onNavigateBack()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(6, 54, 97),
@@ -233,6 +242,10 @@ fun DeviceConfigScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun DeviceRegistrationPreview() {
-    DeviceConfigScreen()
+fun PreviewDeviceConfigScreen() {
+    DeviceConfigScreen(
+        onSaveDevice = { /* Función vacía o lógica de ejemplo */ },
+        //onNavigate = { /* Función vacía o lógica de ejemplo */ },
+        onNavigateBack= { }
+    )
 }
