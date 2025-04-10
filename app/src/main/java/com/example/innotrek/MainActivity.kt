@@ -1,29 +1,27 @@
-package com.example.innotrek
+package com.example.innotrek.ui.theme
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.innotrek.ui.theme.InnoTrekTheme
-import com.example.innotrek.ui.theme.Screens.RegisterScreen
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.innotrek.ui.theme.Screens.DeviceConfigScreen
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        enableEdgeToEdge()
-
         setContent {
             InnoTrekTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                    RegisterScreen(modifier = Modifier.padding(innerPadding))
+                // Pantalla de configuración del dispositivo
+                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    DeviceConfigScreen()
                 }
             }
         }
     }
 }
+
