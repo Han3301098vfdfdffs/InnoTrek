@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">InnoTrek</string>
+    <string name="app_name" translatable="false">InnoTrek</string>
+
+    <string name="google_maps_key" translatable="false">AIzaSyAUzgje2W3ldUJRtEVY9w6esmoXs6gnDrw</string>
+
+    <string name="UNIT_Copilco" translatable="false">https://maps.app.goo.gl/oLaZSJU8ApoEtkfY8</string>
+    <string name="UNIT_Centro" translatable="false">https://maps.app.goo.gl/7RBBesSCuKWeM8vi9</string>
+    <string name="UNIT_Zacatenco" translatable="false">https://maps.app.goo.gl/osRkG6idRn5NiRZs5</string>
+    <string name="UNIT_Guadalajara" translatable="false">https://maps.app.goo.gl/PHbbSc4TC5zuL2ubA</string>
+    <string name="SandoRobotics" translatable="false">https://maps.app.goo.gl/DhPBcgC7j9PvPMkU8</string>
+    <string name="Kinetronica" translatable="false">https://maps.app.goo.gl/8dJv3qyYKuZcX9PJ6</string>
+
+    <string name="Point_UNIT_Copilco" translatable="false">19.33544640170603, -99.17810684417685</string>
+    <string name="Point_UNIT_Centro" translatable="false">19.43037564599832, -99.13994912106737</string>
+    <string name="Point_UNIT_Zacatenco" translatable="false">19.505587363936662, -99.13231755245522</string>
+    <string name="Point_UNIT_Guadalajara" translatable="false">20.67486359055719, -103.34303671164626</string>
+    <string name="Point_SandoRobotics" translatable="false">19.408756784981538, -99.11379515767074</string>
+    <string name="Point_Kinetronica" translatable="false">19.335728245952748, -99.17685682698774</string>
 </resources>
