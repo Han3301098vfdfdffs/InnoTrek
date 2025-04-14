@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.theme.Screens
+package com.example.innotrek.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

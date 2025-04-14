@@ -1,6 +1,4 @@
-package com.example.innotrek.Model
-
-import androidx.compose.ui.graphics.Color
+package com.example.innotrek.model
 
 data class Device(
     val type: String,

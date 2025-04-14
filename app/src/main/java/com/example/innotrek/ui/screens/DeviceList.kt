@@ -1,6 +1,5 @@
-package com.example.innotrek.ui.theme.Screens
+package com.example.innotrek.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +23,8 @@ import androidx.compose.ui.draw.clip
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.innotrek.Data.DeviceViewModel
-import com.example.innotrek.Model.Device
+import com.example.innotrek.data.DeviceViewModel
+import com.example.innotrek.model.Device
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.theme.Screens
+package com.example.innotrek.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +33,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.ui.Alignment
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.ui.draw.clip
-import com.example.innotrek.Model.Device
+import com.example.innotrek.model.Device
 
 
 @OptIn(ExperimentalMaterial3Api::class)
