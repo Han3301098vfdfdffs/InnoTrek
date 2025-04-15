@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.InnoTrek" parent="android:Theme.Material.Light.NoActionBar" />
-
-
+    <style name="Theme.MySplashScreem" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/azul_claro</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo01</item>
+        <item name="windowSplashScreenIconBackgroundColor">#FFFFFF</item>
+        <item name="postSplashScreenTheme">@style/Theme.InnoTrek</item>
+    </style>
+    <style name="Theme.InnoTrek" parent="android:Theme.Material.Light.NoActionBar"/>
 </resources>
