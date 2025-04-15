@@ -1,8 +1,11 @@
 package com.example.innotrek.ui.screens
 
+import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +33,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 @Composable
-fun MyMap(hasLocationPermission: Boolean) {
+fun MyMap() {
+    var hasLocationPermission by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -170,6 +175,26 @@ fun MyMap(hasLocationPermission: Boolean) {
     }
 }
 
+@Composable
+fun RequestLocationPermission(onResult: (Boolean) -> Unit) {
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        onResult(granted)
+    }
+
+    LaunchedEffect(Unit) {
+        permissionLauncher.launch(
+                arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        )
+    }
+}
 
 @Composable
 fun rememberMapLifeCycle(mapView: MapView): LifecycleObserver {

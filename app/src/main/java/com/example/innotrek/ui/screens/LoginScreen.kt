@@ -18,10 +18,12 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
 
 @Composable
-fun LoginScreen(
+fun LoginScreen(navController: NavController,
     modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
@@ -110,15 +112,16 @@ fun LoginScreen(
                 color = Color(0xFF3F51B5),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-
+                    navController.navigate("Registro")
                 }
             )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun LoginScreenPreview() {
-    LoginScreen()
+fun LoginPreview(){
+    val navController = rememberNavController()
+    LoginScreen(navController)
 }

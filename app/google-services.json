@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "935999039311",
+    "project_id": "innotrek-f012e",
+    "storage_bucket": "innotrek-f012e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935999039311:android:564aa5fd9675306c75473a",
+        "android_client_info": {
+          "package_name": "com.example.firebeast_login"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaIvyP16DQ4Cql6Cbd2fjQ4s177s28Luk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935999039311:android:69e515f3fc6208ed75473a",
+        "android_client_info": {
+          "package_name": "com.example.innotrek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaIvyP16DQ4Cql6Cbd2fjQ4s177s28Luk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,10 @@
 package com.example.innotrek.ui.screens
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,16 +14,19 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -108,7 +115,8 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
             Text(
                 "LOG IN",
                 color = Color(6, 54, 97),
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.clickable { navController.navigate("login_screen") }
             )
         }
     }
@@ -116,8 +124,12 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 
 }
 
-@Preview(showBackground = true)
+//Permisos de Ubicación
+
+
+@Preview
 @Composable
-fun RegisterScreenPreview() {
-    RegisterScreen()
+fun RegisterPreview(){
+    val navController = rememberNavController()
+    RegisterScreen(navController)
 }

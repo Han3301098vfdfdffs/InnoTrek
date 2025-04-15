@@ -11,6 +11,8 @@ composeBom = "2024.04.01"
 appcompat = "1.7.0"
 
 [libraries]
+#SplashScreen
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

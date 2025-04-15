@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.InnoTrek"
+        android:theme="@style/Theme.SplashScreen.ComposeSplash"
         tools:targetApi="31">
 
         <meta-data
@@ -24,8 +24,7 @@
         <activity
             android:name="com.example.innotrek.ui.theme.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.InnoTrek">
+            android:theme="@style/Theme.SplashScreen.ComposeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
