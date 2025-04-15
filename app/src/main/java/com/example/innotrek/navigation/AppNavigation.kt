@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.innotrek.ui.screens.HomeScreen
 import com.example.innotrek.ui.screens.LoginScreen
 import com.example.innotrek.ui.screens.RegisterScreen
 import com.example.innotrek.ui.screens.SplashScreen
@@ -20,6 +21,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.Registro.route) {
             RegisterScreen(navController)
+        }
+        composable(route = AppScreens.HomeScreen.route) {
+            HomeScreen(navController)
         }
     }
 }

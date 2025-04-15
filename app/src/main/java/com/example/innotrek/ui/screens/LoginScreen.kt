@@ -21,11 +21,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 
 @Composable
 fun LoginScreen(navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val auth = FirebaseAuth.getInstance()
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val imageRatio = 16f / 8f
@@ -90,7 +96,35 @@ fun LoginScreen(navController: NavController,
         )
 
         Button(
-            onClick = { /* acción del botón */ },
+            onClick = {
+                if (email.isNotBlank() && password.isNotBlank()) {
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val user = auth.currentUser
+                                if (user != null && user.isEmailVerified) {
+                                    // Usuario válido y verificado, ir a HomeScreen
+                                    navController.navigate("home_screen")
+                                } else {
+                                    errorMessage = "Por favor verifica tu correo electrónico antes de continuar."
+                                    showErrorDialog = true
+                                }
+                            } else {
+                                val exception = task.exception
+                                errorMessage = when ((exception as? FirebaseAuthException)?.errorCode) {
+                                    "ERROR_USER_NOT_FOUND" -> "Este correo no está registrado."
+                                    "ERROR_WRONG_PASSWORD" -> "Contraseña incorrecta."
+                                    "ERROR_INVALID_EMAIL" -> "Correo inválido."
+                                    else -> exception?.localizedMessage ?: "Error desconocido"
+                                }
+                                showErrorDialog = true
+                            }
+                        }
+                } else {
+                    errorMessage = "Por favor llena todos los campos."
+                    showErrorDialog = true
+                }
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(6, 54, 97),
                 contentColor = Color(255, 255, 255)
@@ -116,6 +150,18 @@ fun LoginScreen(navController: NavController,
                 }
             )
         }
+    }
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text("Error al iniciar sesión") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                TextButton(onClick = { showErrorDialog = false }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 

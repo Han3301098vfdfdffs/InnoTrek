@@ -1,5 +1,6 @@
 package com.example.innotrek.ui.screens
 
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,9 +21,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) {
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -95,7 +102,35 @@ fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* acción del botón */ },
+            onClick = {
+                if(name.isNotBlank() && email.isNotBlank() && password.isNotBlank()){
+                    FirebaseAuth
+                        .getInstance()
+                        .createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener{
+                            if(it.isSuccessful){
+                                //Verificar que el email existe
+                                val user = FirebaseAuth.getInstance().currentUser
+                                user?.sendEmailVerification()
+                                    ?.addOnCompleteListener { verifyTask ->
+                                        if (verifyTask.isSuccessful) {
+                                            //Se verifica y avisa del correo de verificacion
+                                            showSuccessDialog = true
+                                        } else {
+                                            errorMessage = "No se pudo enviar el correo de verificación."
+                                            showErrorDialog = true
+                                        }
+                                    }
+                            }else{
+                                errorMessage = it.exception?.message ?: "Error desconocido"
+                                showErrorDialog = true
+                            }
+                        }
+                } else{
+                    errorMessage = "Por favor llena todos los campos"
+                    showErrorDialog = true
+                }
+                      },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(6, 54, 97), // Azul (RGB) como color de fondo
                 contentColor = Color(255, 255, 255) // Blanco como color del texto
@@ -116,11 +151,40 @@ fun RegisterScreen(navController: NavController, modifier: Modifier = Modifier) 
             )
         }
     }
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text("Error al registrarse") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                TextButton(
+                    onClick = { showErrorDialog = false }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
+    }else{
+        if (showSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showSuccessDialog = false },
+                title = { Text("Registro exitoso") },
+                text = { Text("Tu cuenta se creó correctamente. Antes de iniciar sesión confirma tu correo. Se envio un correo a tu email") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showSuccessDialog = false
+                            navController.navigate("login_screen")
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
 
-
+    }
 }
-
-//Permisos de Ubicación
 
 
 @Preview
