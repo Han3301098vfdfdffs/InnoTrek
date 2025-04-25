@@ -1,0 +1,8 @@
+package com.example.innotrek.model
+
+import com.google.android.gms.maps.model.LatLng
+
+data class Points(
+    val coordinatesResId: Int, // ID del recurso para las coordenadas
+    val coordinates: LatLng? = null // Opcional, para parsear después
+)
