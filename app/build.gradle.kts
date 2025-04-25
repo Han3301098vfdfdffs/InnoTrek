@@ -56,21 +56,30 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     implementation("androidx.compose.material3:material3:1.4.0-alpha10")
-    implementation("androidx.compose.material3:material3:1.0.1")
+    implementation("androidx.compose.material3:material3:1.3.2")
 
     //Navegación
     implementation("androidx.navigation:navigation-compose:2.8.9")
 
-    //Maps
+    //
+    implementation("com.google.maps.android:maps-compose:2.11.4")
     implementation("com.google.android.gms:play-services-maps:19.1.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     //FireBase
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    //Analytics
     implementation("com.google.firebase:firebase-analytics")
+    //Auth Email
     implementation("com.google.firebase:firebase-auth:23.2.0")
     implementation("com.google.firebase:firebase-auth-ktx:23.2.0")
+    //Auth Google
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
+    //Bluetooth
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

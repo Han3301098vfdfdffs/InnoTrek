@@ -7,31 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:935999039311:android:564aa5fd9675306c75473a",
-        "android_client_info": {
-          "package_name": "com.example.firebeast_login"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCaIvyP16DQ4Cql6Cbd2fjQ4s177s28Luk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:935999039311:android:69e515f3fc6208ed75473a",
         "android_client_info": {
           "package_name": "com.example.innotrek"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "935999039311-ivc6dr56c7i89rbeinqtnuq19veoq6ch.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.innotrek",
+            "certificate_hash": "7aa1722e69b887c66e6e0504c3ebdbc9cfae5aae"
+          }
+        },
+        {
+          "client_id": "935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCaIvyP16DQ4Cql6Cbd2fjQ4s177s28Luk"
@@ -39,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

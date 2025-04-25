@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.theme
+package com.example.innotrek
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-class SplashModel(): ViewModel(){
+class SplashModel: ViewModel(){
     private var _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
@@ -50,7 +50,7 @@ class SplashModel(): ViewModel(){
 
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     AppNavigation()
