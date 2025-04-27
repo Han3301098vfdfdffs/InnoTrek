@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.theme
+package com.example.innotrek
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

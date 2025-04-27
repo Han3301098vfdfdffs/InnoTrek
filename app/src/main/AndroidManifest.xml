@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key"/>
 
         <activity
-            android:name="com.example.innotrek.ui.theme.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MySplashScreem">

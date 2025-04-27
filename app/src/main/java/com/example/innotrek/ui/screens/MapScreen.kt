@@ -4,12 +4,17 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.location.Location
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +33,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,15 +43,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.innotrek.R
 import com.example.innotrek.data.DataMaps
 import com.example.innotrek.navigation.NavigationDrawerContent
+import com.example.innotrek.responsiveTextSize
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -60,31 +72,57 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(navController: NavController) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val sizeVerticalFont = 20.sp
+    val sizeHorizontalFont = 32.sp
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     // Permisos de ubicación
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            if (isGranted) {
-                // Permiso concedido
-            } else {
-                // Permiso denegado
-            }
-        }
-    )
-
-    // Cliente para obtener la ubicación
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-
-    // Mover cameraPositionState al ámbito correcto (fuera del Box)
     val dataMaps = remember { DataMaps(context) }
     val locations = remember { dataMaps.loadStoresWithPoints() }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(locations[0].point ?: LatLng(0.0, 0.0), 10f)
     }
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    // Función para obtener ubicación
+    fun getLastLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val userLatLng = LatLng(it.latitude, it.longitude)
+                    scope.launch {
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(userLatLng, 15f)
+                        )
+                    }
+                }
+            }
+    }
+
+    // Permisos de ubicación con manejo de Snackbar
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                getLastLocation()
+            } else {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        "Permiso de ubicación denegado",
+                        withDismissAction = true
+                    )
+                }
+            }
+        }
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -99,7 +137,10 @@ fun MapScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("InnoTrek") },
+                    title = { Text(
+                        text="Tiendas",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    ) },
                     navigationIcon = {
                         IconButton(
                             onClick = { scope.launch { drawerState.open() } }
@@ -122,20 +163,7 @@ fun MapScreen(navController: NavController) {
                                 Manifest.permission.ACCESS_FINE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED
                         ) {
-                            fusedLocationClient.lastLocation
-                                .addOnSuccessListener { location: Location? ->
-                                    location?.let {
-                                        val userLatLng = LatLng(it.latitude, it.longitude)
-                                        scope.launch {
-                                            cameraPositionState.animate(
-                                                CameraUpdateFactory.newLatLngZoom(
-                                                    userLatLng,
-                                                    15f
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
+                            getLastLocation()
                         } else {
                             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                         }
@@ -160,7 +188,7 @@ fun MapScreen(navController: NavController) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     // Mapa más grande (70% de la pantalla)
                     GoogleMap(
-                        modifier = Modifier.weight(0.7f),
+                        modifier = Modifier.weight(if(isLandscape) 0.5f else 0.7f),
                         cameraPositionState = cameraPositionState,
                         uiSettings = MapUiSettings(
                             zoomControlsEnabled = true,
@@ -207,15 +235,51 @@ fun MapScreen(navController: NavController) {
                                         }
                                     }
                                 ) {
-                                    Column(modifier = Modifier.padding(16.dp)) {
-                                        Text(
-                                            text = context.getStoreNameFromResource(location.nameResId),
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
-                                        Text(
-                                            text = "Lat: ${point.latitude}, Lng: ${point.longitude}",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        // Columna para el texto (60% del ancho)
+                                        Column(
+                                            modifier = Modifier.weight(0.6f)
+                                        ) {
+                                            Text(
+                                                text = context.getStoreNameFromResource(location.nameResId),
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                                            )
+                                            Text(
+                                                text = if(isLandscape) "Lat: %.12f".format(point.latitude) else "Lat: %.8f".format(point.latitude),
+                                                style = MaterialTheme.typography.bodySmall,
+                                                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                                                )
+                                            Text(
+                                                text = if(isLandscape) "Lng: %.12f".format(point.longitude) else "Lng: %.8f".format(point.longitude),
+                                                style = MaterialTheme.typography.bodySmall,
+                                                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                                            )
+                                        }
+
+                                        // Imagen (40% del ancho) - clickable para abrir en Maps
+                                        Box(
+                                            modifier = Modifier
+                                                .weight(0.4f)
+                                                .aspectRatio(1f)
+                                                .clip(MaterialTheme.shapes.medium)
+                                                .clickable {
+                                                    val url = context.getString(location.nameResId)
+                                                    openMapsUrl(context, url)
+                                                }
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.esp32), // Reemplaza con tu imagen
+                                                contentDescription = "Imagen ubicación",
+                                                contentScale = ContentScale.Crop,
+                                                modifier = Modifier.fillMaxSize()
+                                            )
+                                        }
                                     }
                                 }
                             }

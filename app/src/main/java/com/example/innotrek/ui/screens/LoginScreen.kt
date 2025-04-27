@@ -150,7 +150,8 @@ fun LoginScreen(navController: NavController) {
                 modifier = if(isLandscape) Modifier.size(width = 220.dp, height = 70.dp) else Modifier.size(width = 180.dp, height = 50.dp)
             ) {
                 Text(text = "Log In",
-                    fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont))
+                    fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
