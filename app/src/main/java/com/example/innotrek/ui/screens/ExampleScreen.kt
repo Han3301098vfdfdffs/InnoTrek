@@ -23,14 +23,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
 import com.example.innotrek.navigation.NavigationDrawerContent
+import com.example.innotrek.responsiveTextSize
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun ExampleScreen(navController: NavController) {
+
     //Orientación
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -38,6 +43,10 @@ fun HomeScreen(navController: NavController) {
     //Menu Lateral
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    //Fuentes
+    val sizeVerticalFont = 20.sp
+    val sizeHorizontalFont = 32.sp
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -51,7 +60,9 @@ fun HomeScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("InnoTrek") },
+                    title = { Text(text="Example",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    ) },
                     navigationIcon = {
                         IconButton(
                             onClick = { scope.launch { drawerState.open() } }
@@ -77,4 +88,15 @@ fun HomeScreen(navController: NavController) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewExampleScreen() {
+    // Para preview puedes pasar un NavController falso o null-check dentro
+    ExampleScreen(
+        navController = rememberNavController(),
+        //onSaveDevice = { /* ejemplo */ },
+        //onNavigateBack = { /* ejemplo */ }
+    )
 }

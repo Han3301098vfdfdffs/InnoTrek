@@ -19,7 +19,7 @@ fun NavigationDrawerContent(
     val items = listOf(
         AppScreens.HomeScreen to "Inicio",
         AppScreens.MapScreen to "Mapa",
-        AppScreens.DeviceConfigScreen to "Configuración Dispositivo"
+        AppScreens.DeviceScreen to "Configuración Dispositivo"
     )
 
     ModalDrawerSheet {

@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.ui.screens.DeviceConfigScreen
+import com.example.innotrek.ui.screens.DevicesScreen
 import com.example.innotrek.ui.screens.HomeScreen
 import com.example.innotrek.ui.screens.LoginScreen
 import com.example.innotrek.ui.screens.MapScreen
@@ -15,7 +16,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = AppScreens.HomeScreen.route
+        startDestination = AppScreens.DeviceScreen.route
     ){
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
@@ -31,6 +32,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.DeviceConfigScreen.route) {
             DeviceConfigScreen(navController)
+        }
+        composable(route = AppScreens.DeviceScreen.route){
+            DevicesScreen(navController)
         }
     }
 }

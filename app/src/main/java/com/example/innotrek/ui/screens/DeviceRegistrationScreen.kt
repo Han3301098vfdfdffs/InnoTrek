@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
 import com.example.innotrek.model.Device
 import com.example.innotrek.navigation.NavigationDrawerContent
@@ -210,15 +212,13 @@ fun DeviceConfigScreen(
 }
 
 
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewDeviceConfigScreen() {
-//    // Para preview puedes pasar un NavController falso o null-check dentro
-//    DeviceConfigScreen(
-//        navController = rememberNavController(),
-//        onSaveDevice = { /* ejemplo */ },
-//        onNavigateBack = { /* ejemplo */ }
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewDeviceConfigScreen() {
+    // Para preview puedes pasar un NavController falso o null-check dentro
+    DeviceConfigScreen(
+        navController = rememberNavController(),
+        onSaveDevice = { /* ejemplo */ },
+        onNavigateBack = { /* ejemplo */ }
+    )
+}
