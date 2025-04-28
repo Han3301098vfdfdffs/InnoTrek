@@ -274,7 +274,7 @@ fun MapScreen(navController: NavController) {
                                                 }
                                         ) {
                                             Image(
-                                                painter = painterResource(id = R.drawable.esp32), // Reemplaza con tu imagen
+                                                painter = painterResource(id = location.imageResId ?: R.drawable.esp32), // Reemplaza con tu imagen
                                                 contentDescription = "Imagen ubicación",
                                                 contentScale = ContentScale.Crop,
                                                 modifier = Modifier.fillMaxSize()

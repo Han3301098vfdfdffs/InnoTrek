@@ -16,19 +16,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
@@ -60,16 +67,13 @@ import com.example.innotrek.R
 import com.example.innotrek.data.DataDevices
 import com.example.innotrek.navigation.NavigationDrawerContent
 import com.example.innotrek.responsiveTextSize
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DevicesScreen(navController: NavController) {
-    // Orientación
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     // Menu Lateral
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -121,25 +125,45 @@ fun DevicesScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceContent() {
     val devices = DataDevices().loadDevices()
     var selectedDeviceIndex by remember { mutableIntStateOf(-1) } // -1 means no device selected
-    var isAutoScrolling by remember { mutableStateOf(selectedDeviceIndex == -1) }
     var connectionType by remember { mutableStateOf("") } // "wifi" or "bluetooth"
     var ipAddress by remember { mutableStateOf(TextFieldValue("")) }
     var port by remember { mutableStateOf(TextFieldValue("")) }
-    var bluetoothDevices by remember { mutableStateOf(listOf("Dispositivo BT 1", "Dispositivo BT 2", "Dispositivo BT 3")) }
+
+    val bluetoothDevices by remember { mutableStateOf(listOf("Dispositivo BT 1", "Dispositivo BT 2", "Dispositivo BT 3")) }
     var selectedBluetoothDevice by remember { mutableStateOf("") }
     var currentAutoScrollIndex by remember { mutableIntStateOf(0) }
+    var dropdownExpanded by remember { mutableStateOf(false) }
 
-    // Auto-scroll effect
+    //CoroutineScope independiente para el carrusel
+    var isAutoScrolling by remember { mutableStateOf(selectedDeviceIndex == -1) }
+    val autoScrollScope = rememberCoroutineScope()
+    var autoScrollJob by remember { mutableStateOf<Job?>(null) }
+
+    //Orientación
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    val sizeVerticalFont = 18.sp
+    val sizeHorizontalFont = 26.sp
+
+
+    // Carrusel con Hilos
     LaunchedEffect(isAutoScrolling, selectedDeviceIndex) {
-        if (isAutoScrolling) {
-            while (isAutoScrolling) {
-                delay(3000) // 3 seconds delay between images
-                currentAutoScrollIndex = (currentAutoScrollIndex + 1) % devices.size
+        if (isAutoScrolling && selectedDeviceIndex == -1) {
+            autoScrollJob?.cancel()
+            autoScrollJob = autoScrollScope.launch {
+                while (isAutoScrolling && selectedDeviceIndex == -1) {
+                    delay(3000) // 3 seconds delay between images
+                    currentAutoScrollIndex = (currentAutoScrollIndex + 1) % devices.size
+                }
             }
+        } else {
+            autoScrollJob?.cancel()
         }
     }
 
@@ -147,12 +171,13 @@ fun DeviceContent() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         // Device image display
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(if(isLandscape) 150.dp else 250.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.LightGray),
             contentAlignment = Alignment.Center
@@ -161,83 +186,65 @@ fun DeviceContent() {
 
             if (devices.isNotEmpty()) {
                 Image(
-                    painter = painterResource(id = devices[displayIndex].drawableResourceId),
-                    contentDescription = stringResource(id = devices[displayIndex].stringResourceId),
+                    painter = painterResource(id = devices[displayIndex].deviceDrawableResourceId),
+                    contentDescription = stringResource(id = devices[displayIndex].deviceStringResourceId),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Device selection dropdown
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                .clickable { isAutoScrolling = false }
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            var expanded by remember { mutableStateOf(false) }
-            var selectedText by remember {
-                mutableStateOf(
-                    if (selectedDeviceIndex == -1) "Elegir dispositivo"
-                    else "wtf"
-                    //else stringResource(id = devices[selectedDeviceIndex].stringResourceId)
-                )
+        // Improved device selection dropdown
+        ExposedDropdownMenuBox(
+            expanded = dropdownExpanded,
+            onExpandedChange = { newValue ->
+                dropdownExpanded = newValue
+                if (!newValue && selectedDeviceIndex == -1) {
+                    isAutoScrolling = true
+                }
             }
-
-            Column {
-                BasicTextField(
-                    value = selectedText,
-                    onValueChange = {},
-                    readOnly = true,
-                    textStyle = TextStyle.Default.copy(fontSize = 16.sp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expanded = !expanded }
+        ){
+            TextField(
+                value = if (selectedDeviceIndex == -1) "Seleccionar dispositivo"
+                else stringResource(id = devices[selectedDeviceIndex].deviceStringResourceId),
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = dropdownExpanded) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryEditable, enabled = true),
+                textStyle = TextStyle(
+                    fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
                 )
+            )
 
-                if (expanded) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .background(Color.White)
-                            .border(1.dp, Color.Gray)
-                    ) {
-                        item {
-                            Text(
-                                text = "Elegir dispositivo",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        selectedDeviceIndex = -1
-                                        selectedText = "Elegir dispositivo"
-                                        isAutoScrolling = true
-                                        expanded = false
-                                    }
-                                    .padding(8.dp)
-                            )
-                        }
-                        items(devices.size) { index ->
-                            Text(
-                                text = stringResource(id = devices[index].stringResourceId),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        selectedDeviceIndex = index
-                                        selectedText = "wtf"
-                                        //selectedText = stringResource(id = devices[index].stringResourceId)
-                                        isAutoScrolling = false
-                                        expanded = false
-                                    }
-                                    .padding(8.dp)
-                            )
-                        }
+            ExposedDropdownMenu(
+                expanded = dropdownExpanded,
+                onDismissRequest = { dropdownExpanded = false }
+            ) {
+                DropdownMenuItem(
+                    text = { Text(
+                        text = "Seleccionar dispositivo",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    )},
+                    onClick = {
+                        selectedDeviceIndex = -1
+                        isAutoScrolling = true
+                        dropdownExpanded = false
                     }
+                )
+                devices.forEachIndexed { index, device ->
+                    DropdownMenuItem(
+                        text = { Text(
+                            text = stringResource(id = device.deviceStringResourceId),
+                            fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                        ) },
+                        onClick = {
+                            selectedDeviceIndex = index
+                            isAutoScrolling = false
+                            dropdownExpanded = false
+                        }
+                    )
                 }
             }
         }
@@ -257,7 +264,10 @@ fun DeviceContent() {
                 ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("WiFi")
+                Text(
+                    text = "WiFi",
+                    fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                )
             }
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -270,7 +280,10 @@ fun DeviceContent() {
                 ),
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Bluetooth")
+                Text(
+                    text = "Bluetooth",
+                    fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                )
             }
         }
 
@@ -280,7 +293,10 @@ fun DeviceContent() {
         when (connectionType) {
             "wifi" -> {
                 Column {
-                    Text("Dirección IP:")
+                    Text(
+                        text = "Dirección IP:",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    )
                     BasicTextField(
                         value = ipAddress,
                         onValueChange = { ipAddress = it },
@@ -292,7 +308,10 @@ fun DeviceContent() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    Text("Puerto:")
+                    Text(
+                        text = "Puerto:",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    )
                     BasicTextField(
                         value = port,
                         onValueChange = { port = it },
@@ -305,7 +324,10 @@ fun DeviceContent() {
             }
             "bluetooth" -> {
                 Column {
-                    Text("Dispositivos Bluetooth disponibles:")
+                    Text(
+                        text = "Dispositivos Bluetooth disponibles:",
+                        fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+                    )
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -325,7 +347,8 @@ fun DeviceContent() {
                                         if (bluetoothDevices[index] == selectedBluetoothDevice)
                                             colorResource(id = R.color.azul_fondo).copy(alpha = 0.3f)
                                         else Color.Transparent
-                                    )
+                                    ),
+                                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
                             )
                         }
                     }
@@ -338,7 +361,11 @@ fun DeviceContent() {
             }
             else -> {
                 // No connection type selected
-                Text("Seleccione un tipo de conexión", color = Color.Gray)
+                Text(
+                    text = "Seleccione un tipo de conexión",
+                    color = Color.Gray,
+                    fontSize = responsiveTextSize(16.sp, 22.sp)
+                )
             }
         }
 
@@ -355,7 +382,10 @@ fun DeviceContent() {
                 contentColor = Color.White
             )
         ) {
-            Text("Guardar configuración")
+            Text(
+                text = "Guardar configuración",
+                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
+            )
         }
     }
 }
