@@ -2,8 +2,8 @@ package com.example.innotrek.data
 
 import android.content.Context
 import com.example.innotrek.R
-import com.example.innotrek.model.Points
-import com.example.innotrek.model.Stores
+import com.example.innotrek.data.model.Points
+import com.example.innotrek.data.model.Stores
 import com.google.android.gms.maps.model.LatLng
 
 class DataMaps(private val context: Context) {

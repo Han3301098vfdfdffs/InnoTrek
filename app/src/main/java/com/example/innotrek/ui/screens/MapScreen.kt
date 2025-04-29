@@ -56,8 +56,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.innotrek.R
 import com.example.innotrek.data.DataMaps
-import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.responsiveTextSize
+import com.example.innotrek.ui.components.navigation.NavigationDrawerContent
+import com.example.innotrek.ui.utils.composables.responsiveTextSize
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition

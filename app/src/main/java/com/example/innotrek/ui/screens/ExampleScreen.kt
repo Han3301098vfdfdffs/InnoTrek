@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
-import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.responsiveTextSize
+import com.example.innotrek.ui.components.navigation.NavigationDrawerContent
+import com.example.innotrek.ui.utils.composables.responsiveTextSize
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

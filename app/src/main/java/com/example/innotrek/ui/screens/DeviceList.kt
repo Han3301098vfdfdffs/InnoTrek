@@ -29,8 +29,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.innotrek.data.DeviceViewModel
-import com.example.innotrek.model.Device
-import com.example.innotrek.navigation.NavigationDrawerContent
+import com.example.innotrek.data.model.Device
+import com.example.innotrek.ui.components.navigation.NavigationDrawerContent
 import kotlinx.coroutines.launch
 
 

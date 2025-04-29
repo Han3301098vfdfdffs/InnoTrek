@@ -1,7 +1,7 @@
 package com.example.innotrek.data
 
 import com.example.innotrek.R
-import com.example.innotrek.model.Devices
+import com.example.innotrek.data.model.Devices
 
 class DataDevices(){
     fun loadDevices(): List<Devices>{

@@ -1,8 +1,8 @@
-package com.example.innotrek.navigation
+package com.example.innotrek.ui.components.navigation
 
 sealed class AppScreens(val route: String) {
     object LoginScreen: AppScreens("login_screen")
-    object SingUpScreen: AppScreens("singup_screen")
+    object RegisterScreen: AppScreens("register_screen")
     object SplashScreen: AppScreens("splash_screen")
     object HomeScreen: AppScreens("home_screen")
     object MapScreen: AppScreens("map_screen")
@@ -14,7 +14,7 @@ sealed class AppScreens(val route: String) {
         fun fromRoute(route: String?): AppScreens = when (route) {
             SplashScreen.route -> SplashScreen
             LoginScreen.route -> LoginScreen
-            SingUpScreen.route -> SingUpScreen
+            RegisterScreen.route -> RegisterScreen
             HomeScreen.route -> HomeScreen
             MapScreen.route -> MapScreen
             DeviceConfigScreen.route -> DeviceConfigScreen

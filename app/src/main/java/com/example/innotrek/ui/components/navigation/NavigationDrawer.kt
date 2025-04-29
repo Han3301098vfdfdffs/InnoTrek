@@ -1,4 +1,4 @@
-package com.example.innotrek.navigation
+package com.example.innotrek.ui.components.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider

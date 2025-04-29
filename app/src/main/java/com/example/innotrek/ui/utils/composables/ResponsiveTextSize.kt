@@ -1,4 +1,4 @@
-package com.example.innotrek
+package com.example.innotrek.ui.utils.composables
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable

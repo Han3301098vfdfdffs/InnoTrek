@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -65,8 +63,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.R
 import com.example.innotrek.data.DataDevices
-import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.responsiveTextSize
+import com.example.innotrek.ui.components.navigation.NavigationDrawerContent
+import com.example.innotrek.ui.utils.composables.responsiveTextSize
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -134,8 +132,6 @@ fun DeviceContent() {
     var ipAddress by remember { mutableStateOf(TextFieldValue("")) }
     var port by remember { mutableStateOf(TextFieldValue("")) }
 
-    val bluetoothDevices by remember { mutableStateOf(listOf("Dispositivo BT 1", "Dispositivo BT 2", "Dispositivo BT 3")) }
-    var selectedBluetoothDevice by remember { mutableStateOf("") }
     var currentAutoScrollIndex by remember { mutableIntStateOf(0) }
     var dropdownExpanded by remember { mutableStateOf(false) }
 
@@ -150,7 +146,6 @@ fun DeviceContent() {
 
     val sizeVerticalFont = 18.sp
     val sizeHorizontalFont = 26.sp
-
 
     // Carrusel con Hilos
     LaunchedEffect(isAutoScrolling, selectedDeviceIndex) {
@@ -328,35 +323,6 @@ fun DeviceContent() {
                         text = "Dispositivos Bluetooth disponibles:",
                         fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
                     )
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                            .border(1.dp, Color.Gray)
-                    ) {
-                        items(bluetoothDevices.size) { index ->
-                            Text(
-                                text = bluetoothDevices[index],
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        selectedBluetoothDevice = bluetoothDevices[index]
-                                    }
-                                    .padding(8.dp)
-                                    .background(
-                                        if (bluetoothDevices[index] == selectedBluetoothDevice)
-                                            colorResource(id = R.color.azul_fondo).copy(alpha = 0.3f)
-                                        else Color.Transparent
-                                    ),
-                                fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
-                            )
-                        }
-                    }
-
-                    if (selectedBluetoothDevice.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Conectado a: $selectedBluetoothDevice")
-                    }
                 }
             }
             else -> {
@@ -389,6 +355,7 @@ fun DeviceContent() {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
