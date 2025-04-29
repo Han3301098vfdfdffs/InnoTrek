@@ -4,11 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.innotrek.ui.screens.DeviceConfigScreen
-import com.example.innotrek.ui.screens.HomeScreen
-import com.example.innotrek.ui.screens.LoginScreen
-import com.example.innotrek.ui.screens.MapScreen
-import com.example.innotrek.ui.screens.RegisterScreen
+import com.example.innotrek.ui.screens.maps.MapScreen
+import com.example.innotrek.ui.screens.devices.DevicesScreen
+import com.example.innotrek.ui.screens.login.LoginScreen
+import com.example.innotrek.ui.screens.home.HomeScreen
+import com.example.innotrek.ui.screens.auth.RegisterScreen
 
 @Composable
 fun AppNavigation() {
@@ -20,7 +20,7 @@ fun AppNavigation() {
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
         }
-        composable(route = AppScreens.SingUpScreen.route) {
+        composable(route = AppScreens.RegisterScreen.route) {
             RegisterScreen(navController)
         }
         composable(route = AppScreens.HomeScreen.route) {
@@ -29,8 +29,8 @@ fun AppNavigation() {
         composable(route = AppScreens.MapScreen.route) {
             MapScreen(navController)
         }
-        composable(route = AppScreens.DeviceConfigScreen.route) {
-            DeviceConfigScreen(navController)
+        composable(route = AppScreens.DeviceScreen.route){
+            DevicesScreen(navController)
         }
     }
 }

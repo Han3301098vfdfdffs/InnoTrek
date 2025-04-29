@@ -1,4 +1,4 @@
-package com.example.innotrek.model
+package com.example.innotrek.data.model
 
 import com.google.android.gms.maps.model.LatLng
 

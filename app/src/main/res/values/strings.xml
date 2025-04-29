@@ -17,4 +17,14 @@
     <string name="Point_SandoRobotics">19.408756784981538, -99.11379515767074</string>
     <string name="Point_Kinetronica">19.335728245952748, -99.17685682698774</string>
 
+    <string name="Device_00">Arduino MEGA 2560</string>
+    <string name="Device_01">Arduino UNO NANO</string>
+    <string name="Device_02">Arduino UNO R3</string>
+    <string name="Device_03">ESP32 C3</string>
+    <string name="Device_04">ESP32 S2</string>
+    <string name="Device_05">ESP32 S3</string>
+    <string name="Device_06">ESP32 WROOM 32</string>
+    <string name="Device_07">Raspberry Pi Pico</string>
+
+
 </resources>
