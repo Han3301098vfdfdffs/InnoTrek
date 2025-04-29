@@ -52,37 +52,36 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
 
-    //SplashScreen
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    // AndroidX
+    implementation (libs.androidx.core)
+    implementation (libs.splashscreen)
 
-    implementation("androidx.compose.material3:material3:1.4.0-alpha10")
-    implementation("androidx.compose.material3:material3:1.3.2")
+    // Compose
+    implementation (libs.compose.ui)
+    implementation (libs.compose.ui.unit)
+    implementation (libs.compose.material3)
+    implementation (libs.compose.material3.alpha)
+    implementation (libs.compose.icons.extended)
+    implementation (libs.navigation.compose)
 
-    //Navegación
-    implementation("androidx.navigation:navigation-compose:2.8.9")
+    // Maps
+    implementation (libs.maps.compose)
+    implementation (libs.play.services.maps)
+    implementation (libs.play.services.location)
 
-    //Maps
-    implementation("com.google.maps.android:maps-compose:2.11.4")
-    implementation("com.google.android.gms:play-services-maps:19.1.0")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    implementation("androidx.compose.ui:ui:1.8.0")
-    implementation("androidx.compose.ui:ui-unit:1.8.0")
+    // Firebase (usando BOM)
+    implementation (platform(libs.firebase.bom))
+    implementation (libs.firebase.analytics)
+    implementation (libs.firebase.auth)
+    implementation (libs.firebase.auth.ktx)
 
-    //FireBase
-    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
-    //Analytics
-    implementation("com.google.firebase:firebase-analytics")
-    //Auth Email
-    implementation("com.google.firebase:firebase-auth:23.2.0")
-    implementation("com.google.firebase:firebase-auth-ktx:23.2.0")
-    //Auth Google
-    implementation("com.google.android.gms:play-services-auth:21.3.0")
-    implementation("androidx.credentials:credentials:1.5.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    // Auth
+    implementation (libs.play.services.auth)
+    implementation (libs.credentials)
+    implementation (libs.googleid)
 
-    //Bluetooth
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    // Lifecycle
+    implementation (libs.lifecycle.viewmodel.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
