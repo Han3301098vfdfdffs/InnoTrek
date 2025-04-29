@@ -13,13 +13,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AuthTextField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     isLandscape: Boolean,
-    modifier: Modifier = Modifier
 ) {
     val fontSize = if (isLandscape) 26.sp else 18.sp
 

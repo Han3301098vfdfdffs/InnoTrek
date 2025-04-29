@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.register
+package com.example.innotrek.ui.screens.auth
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.innotrek.R
-import com.example.innotrek.ui.components.navigation.AppScreens
+import com.example.innotrek.navigation.AppScreens
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
 import com.example.innotrek.ui.components.auth.AuthButton
 import com.example.innotrek.ui.components.auth.AuthDialog

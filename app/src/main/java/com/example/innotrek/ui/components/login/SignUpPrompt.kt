@@ -11,11 +11,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.innotrek.ui.components.navigation.AppScreens
+import com.example.innotrek.navigation.AppScreens
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
 
 @Composable
-fun SignUpPrompt(navController: NavController, isLandscape: Boolean) {
+fun SignUpPrompt(navController: NavController) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         Text(
             text = "Don't have an account? ",

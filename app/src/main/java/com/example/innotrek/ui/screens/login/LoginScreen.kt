@@ -42,13 +42,11 @@ fun LoginScreen(navController: NavController) {
             EmailField(
                 value = viewModel.email,
                 onValueChange = { viewModel.email = it },
-                isLandscape = isLandscape
             )
             Spacer(modifier = Modifier.height(8.dp))
             PasswordField(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
-                isLandscape = isLandscape
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -62,7 +60,7 @@ fun LoginScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            SignUpPrompt(navController, isLandscape)
+            SignUpPrompt(navController)
         }
     }
 

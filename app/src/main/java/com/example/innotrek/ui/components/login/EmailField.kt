@@ -15,7 +15,6 @@ import com.example.innotrek.ui.utils.composables.responsiveTextSize
 fun EmailField(
     value: String,
     onValueChange: (String) -> Unit,
-    isLandscape: Boolean
 ) {
     OutlinedTextField(
         value = value,

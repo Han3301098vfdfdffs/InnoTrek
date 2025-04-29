@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.register
+package com.example.innotrek.ui.screens.auth
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth

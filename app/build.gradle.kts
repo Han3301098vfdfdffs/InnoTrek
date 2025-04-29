@@ -61,11 +61,13 @@ dependencies {
     //Navegación
     implementation("androidx.navigation:navigation-compose:2.8.9")
 
-    //
+    //Maps
     implementation("com.google.maps.android:maps-compose:2.11.4")
     implementation("com.google.android.gms:play-services-maps:19.1.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation("androidx.compose.ui:ui:1.8.0")
+    implementation("androidx.compose.ui:ui-unit:1.8.0")
 
     //FireBase
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))

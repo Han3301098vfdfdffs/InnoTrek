@@ -16,7 +16,6 @@ import com.example.innotrek.ui.utils.composables.responsiveTextSize
 fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit,
-    isLandscape: Boolean
 ) {
     OutlinedTextField(
         value = value,

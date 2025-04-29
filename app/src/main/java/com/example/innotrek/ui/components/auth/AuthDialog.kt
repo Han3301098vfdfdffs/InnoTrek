@@ -10,11 +10,11 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun AuthDialog(
+    modifier: Modifier = Modifier,
     title: String,
     message: String,
     onDismiss: () -> Unit,
     confirmText: String = "OK",
-    modifier: Modifier = Modifier
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,

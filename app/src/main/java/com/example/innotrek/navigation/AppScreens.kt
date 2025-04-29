@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.components.navigation
+package com.example.innotrek.navigation
 
 sealed class AppScreens(val route: String) {
     object LoginScreen: AppScreens("login_screen")
@@ -6,7 +6,6 @@ sealed class AppScreens(val route: String) {
     object SplashScreen: AppScreens("splash_screen")
     object HomeScreen: AppScreens("home_screen")
     object MapScreen: AppScreens("map_screen")
-    object DeviceConfigScreen: AppScreens("device_config_screen")
     object DeviceScreen: AppScreens("device_screen")
 
     // Función para evitar rutas mal escritas
@@ -17,7 +16,6 @@ sealed class AppScreens(val route: String) {
             RegisterScreen.route -> RegisterScreen
             HomeScreen.route -> HomeScreen
             MapScreen.route -> MapScreen
-            DeviceConfigScreen.route -> DeviceConfigScreen
             DeviceScreen.route -> DeviceScreen
 
             null -> HomeScreen  // Ruta por defecto

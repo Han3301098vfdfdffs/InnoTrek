@@ -1,43 +1,44 @@
-package com.example.innotrek.ui.screens.home
+package com.example.innotrek.ui.screens.devices
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.example.innotrek.navigation.NavigationDrawerContent
 import com.example.innotrek.ui.components.common.TopAppBar
-import com.example.innotrek.ui.components.home.HomeContent
-import com.example.innotrek.ui.components.home.HomeDrawer
+import com.example.innotrek.ui.components.devices.DeviceContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(navController: NavController) {
-    // Estado del drawer
+fun DevicesScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    HomeDrawer(
+    ModalNavigationDrawer(
         drawerState = drawerState,
-        navController = navController,
-        coroutineScope = scope
+        drawerContent = {
+            NavigationDrawerContent(
+                navController = navController,
+                onItemSelected = { scope.launch { drawerState.close() } }
+            )
+        }
     ) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = "InnoTrek", // Texto del título
-                    onMenuClick = { scope.launch { drawerState.open() } }
+                    title = "Dispositivos",
+                    onMenuClick = { scope.launch { drawerState.open() } },
                 )
             }
         ) { padding ->
-            HomeContent(
-                modifier = Modifier.padding(padding)
-            ) {
-                // Aquí iría el contenido real de tu pantalla
-                Text("Contenido principal")
+            Box(modifier = Modifier.padding(padding)) {
+                DeviceContent()
             }
         }
     }
