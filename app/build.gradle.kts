@@ -83,6 +83,7 @@ dependencies {
 
     //Bluetooth
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("com.google.accompanist:accompanist-permissions:0.28.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

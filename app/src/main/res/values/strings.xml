@@ -27,4 +27,17 @@
     <string name="Device_07">Raspberry Pi Pico</string>
 
 
+    <string name="bluetooth_permission_rationale">Se necesita permiso de conexión Bluetooth para buscar y conectar dispositivos</string>
+    <string name="bluetooth_permission_denied">El permiso de conexión Bluetooth fue denegado. Por favor habilítalo en configuración</string>
+    <string name="bluetooth_scan_permission_rationale">Se necesita permiso de escaneo Bluetooth para buscar dispositivos</string>
+    <string name="bluetooth_scan_permission_denied">El permiso de escaneo Bluetooth fue denegado. Por favor habilítalo en configuración</string>
+    <string name="location_permission_rationale">Se necesita permiso de ubicación para buscar dispositivos Bluetooth</string>
+    <string name="location_permission_denied">El permiso de ubicación fue denegado. Por favor habilítalo en configuración</string>
+    <string name="enable_bluetooth">Activar Bluetooth</string>
+    <string name="connect_device">Conectar dispositivo</string>
+    <string name="connected_devices">Dispositivos conectados</string>
+    <string name="no_connected_devices">No hay dispositivos conectados</string>
+    <string name="unknown_device">Dispositivo desconocido</string>
+    <string name="grant_permission">Conceder permiso</string>
+    <string name="open_settings">Abrir configuración</string>
 </resources>
