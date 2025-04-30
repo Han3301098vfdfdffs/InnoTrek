@@ -32,6 +32,7 @@ fun DeviceDropdown(
     val sizeVerticalFont = 18.sp
     val sizeHorizontalFont = 26.sp
 
+
     ExposedDropdownMenuBox(
         expanded = dropdownExpanded,
         onExpandedChange = { dropdownExpanded = it },
