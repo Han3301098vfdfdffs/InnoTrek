@@ -31,5 +31,7 @@ interface BluetoothConfigurationDao {
     @Query("SELECT * FROM bluetooth_configuration")
     suspend fun getAll(): List<BluetoothConfiguration>
 
-    // Puedes agregar más queries según necesites
+    // Eliminar una configuración por ID
+    @Query("DELETE FROM bluetooth_configuration WHERE disp = :id")
+    suspend fun deleteById(id: Int)
 }

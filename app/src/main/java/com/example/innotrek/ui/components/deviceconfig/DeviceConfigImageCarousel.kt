@@ -31,7 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun DeviceImageCarousel(
+fun DeviceConfigImageCarousel(
     devices: List<Device>,
     selectedDeviceIndex: Int,
     onDeviceSelected: (Int) -> Unit,

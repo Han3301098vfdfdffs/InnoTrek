@@ -28,15 +28,15 @@ import com.example.innotrek.data.DataDevices
 import com.example.innotrek.ui.components.common.WarningMessage
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothConnectionContent
 import com.example.innotrek.ui.screens.deviceconfig.ConnectionTypeSelector
-import com.example.innotrek.ui.screens.deviceconfig.DeviceViewModel
+import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
 import com.example.innotrek.ui.screens.deviceconfig.wifi.WifiConnectionContent
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothViewModel
 
 
 @Composable
-fun DeviceContent() {
+fun DeviceConfigContent() {
     val devices = DataDevices().loadDevices() // Obtén la lista de dispositivos
-    val deviceViewModel: DeviceViewModel = viewModel()
+    val deviceConfigViewModel: DeviceConfigViewModel = viewModel()
     val bluetoothViewModel: BluetoothViewModel = viewModel()
 
     // Estado para controlar si mostrar el mensaje de advertencia
@@ -44,7 +44,7 @@ fun DeviceContent() {
 
     LaunchedEffect(Unit) {
         // Observar cambios cuando se guarda la configuración
-        snapshotFlow { deviceViewModel.connectionType }
+        snapshotFlow { deviceConfigViewModel.connectionType }
             .collect { if (it.isEmpty()) bluetoothViewModel.resetSelection() }
     }
 
@@ -55,22 +55,22 @@ fun DeviceContent() {
             .verticalScroll(rememberScrollState())
     ) {
 
-        DeviceImageCarousel(
+        DeviceConfigImageCarousel(
             devices = devices,
-            selectedDeviceIndex = deviceViewModel.selectedDeviceIndex,
+            selectedDeviceIndex = deviceConfigViewModel.selectedDeviceIndex,
             onDeviceSelected = {
-                deviceViewModel.selectDevice(it)
+                deviceConfigViewModel.selectDevice(it)
                 showDeviceNotSelectedWarning.value = false
             }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        DeviceDropdown(
+        DeviceConfigDropdown(
             devices = devices,
-            selectedDeviceIndex = deviceViewModel.selectedDeviceIndex,
+            selectedDeviceIndex = deviceConfigViewModel.selectedDeviceIndex,
             onDeviceSelected = {
-                deviceViewModel.selectDevice(it)
+                deviceConfigViewModel.selectDevice(it)
                 showDeviceNotSelectedWarning.value = false
             }
         )
@@ -78,12 +78,12 @@ fun DeviceContent() {
         Spacer(modifier = Modifier.height(16.dp))
 
         ConnectionTypeSelector(
-            selectedType = deviceViewModel.connectionType,
+            selectedType = deviceConfigViewModel.connectionType,
             onTypeSelected = {
-                if (deviceViewModel.selectedDeviceIndex == -1) {
+                if (deviceConfigViewModel.selectedDeviceIndex == -1) {
                     showDeviceNotSelectedWarning.value = true
                 } else {
-                    deviceViewModel.selectConnectionType(it)
+                    deviceConfigViewModel.selectConnectionType(it)
                     showDeviceNotSelectedWarning.value = false
                 }
             }
@@ -91,8 +91,8 @@ fun DeviceContent() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        when (deviceViewModel.connectionType) {
-            "wifi" -> WifiConnectionContent(viewModel = deviceViewModel)
+        when (deviceConfigViewModel.connectionType) {
+            "wifi" -> WifiConnectionContent(viewModel = deviceConfigViewModel)
             "bluetooth" -> BluetoothConnectionContent()
             else -> NoConnectionSelected()
         }

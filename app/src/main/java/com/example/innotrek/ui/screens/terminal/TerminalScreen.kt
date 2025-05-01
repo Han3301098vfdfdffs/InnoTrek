@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens
+package com.example.innotrek.ui.screens.terminal
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -17,7 +17,7 @@ import com.example.innotrek.ui.components.terminal.TerminalContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun ExampleScreen(navController: NavController) {
+fun TerminalScreen(navController: NavController) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -34,12 +34,13 @@ fun ExampleScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 com.example.innotrek.ui.components.common.TopAppBar(
-                    title = "Dispositivos",
+                    title = "Terminal",
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
+                TerminalContent(navController)
             }
         }
     }
@@ -49,7 +50,7 @@ fun ExampleScreen(navController: NavController) {
 @Composable
 fun PreviewExampleScreen() {
     // Para preview puedes pasar un NavController falso o null-check dentro
-    ExampleScreen(
+    TerminalScreen(
         navController = rememberNavController(),
         //onSaveDevice = { /* ejemplo */ },
         //onNavigateBack = { /* ejemplo */ }

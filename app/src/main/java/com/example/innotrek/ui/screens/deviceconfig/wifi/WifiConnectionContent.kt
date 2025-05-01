@@ -6,16 +6,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.example.innotrek.R
 import com.example.innotrek.data.DataDevices
 import com.example.innotrek.data.DatabaseProvider
 import com.example.innotrek.data.WifiConfiguration
-import com.example.innotrek.ui.screens.deviceconfig.DeviceViewModel
+import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun WifiConnectionContent(
-    viewModel: DeviceViewModel,
+    viewModel: DeviceConfigViewModel,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -90,7 +93,11 @@ fun WifiConnectionContent(
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.azul_fondo),
+                contentColor = colorResource(id = R.color.white)
+            )
         ) {
             Text("Guardar Dispositivo")
         }

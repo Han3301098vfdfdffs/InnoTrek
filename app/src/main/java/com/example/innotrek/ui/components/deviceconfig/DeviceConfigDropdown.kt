@@ -22,7 +22,7 @@ import com.example.innotrek.ui.utils.composables.responsiveTextSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceDropdown(
+fun DeviceConfigDropdown(
     devices: List<Device>,
     selectedDeviceIndex: Int,
     onDeviceSelected: (Int) -> Unit,

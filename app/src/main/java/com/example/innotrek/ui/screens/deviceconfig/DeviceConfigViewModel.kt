@@ -9,7 +9,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import com.example.innotrek.data.model.Device
 
-class DeviceViewModel : ViewModel() {
+class DeviceConfigViewModel : ViewModel() {
 
     val ipError = mutableStateOf<String?>(null)
     val portError = mutableStateOf<String?>(null)

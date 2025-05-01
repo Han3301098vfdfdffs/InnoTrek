@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens
+package com.example.innotrek.ui.screens.device
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -13,11 +13,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.terminal.TerminalContent
+import com.example.innotrek.ui.components.common.TopAppBar
+import com.example.innotrek.ui.components.device.AddFab
+import com.example.innotrek.ui.components.device.DeviceContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun ExampleScreen(navController: NavController) {
+fun DeviceScreen(navController: NavController) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -33,13 +35,16 @@ fun ExampleScreen(navController: NavController) {
     ) {
         Scaffold(
             topBar = {
-                com.example.innotrek.ui.components.common.TopAppBar(
+                TopAppBar(
                     title = "Dispositivos",
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
-            }
+            },
+            floatingActionButton = { AddFab(navController)}
+
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
+                DeviceContent(navController)
             }
         }
     }
@@ -49,7 +54,7 @@ fun ExampleScreen(navController: NavController) {
 @Composable
 fun PreviewExampleScreen() {
     // Para preview puedes pasar un NavController falso o null-check dentro
-    ExampleScreen(
+    DeviceScreen(
         navController = rememberNavController(),
         //onSaveDevice = { /* ejemplo */ },
         //onNavigateBack = { /* ejemplo */ }

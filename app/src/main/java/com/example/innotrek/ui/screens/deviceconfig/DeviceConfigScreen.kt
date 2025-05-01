@@ -10,24 +10,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
 import com.example.innotrek.ui.components.common.TopAppBar
-import com.example.innotrek.ui.components.deviceconfig.DeviceContent
+import com.example.innotrek.ui.components.deviceconfig.DeviceConfigContent
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothViewModel
+import com.example.innotrek.ui.theme.InnoTrekTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun DevicesScreen(navController: NavController) {
+fun DeviceConfigScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val deviceViewModel: DeviceViewModel = viewModel()
+    val deviceConfigViewModel: DeviceConfigViewModel = viewModel()
     val bluetoothViewModel: BluetoothViewModel = viewModel()
 
     // Sincroniza el estado de selección Bluetooth
     LaunchedEffect(bluetoothViewModel.selectedDevice.value) {
-        deviceViewModel.updateBluetoothSelectionStatus(
+        deviceConfigViewModel.updateBluetoothSelectionStatus(
             bluetoothViewModel.selectedDevice.value != null
         )
     }
@@ -43,15 +46,20 @@ fun DevicesScreen(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = "Dispositivos",
+                    title = "Configuración de Dispositivos",
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                DeviceContent()
+                DeviceConfigContent()
             }
         }
     }
+}
 
+@Preview(showBackground = true)
+@Composable
+fun DeviceConfigScreenPreview() {
+    DeviceConfigScreen(navController = rememberNavController())
 }

@@ -34,7 +34,7 @@ import com.example.innotrek.R
 import com.example.innotrek.data.BluetoothConfiguration
 import com.example.innotrek.data.DataDevices
 import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.ui.screens.deviceconfig.DeviceViewModel
+import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ fun BluetoothConnectionContent() {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val bluetoothViewModel: BluetoothViewModel = viewModel()
-    val deviceViewModel: DeviceViewModel = viewModel()
+    val deviceConfigViewModel: DeviceConfigViewModel = viewModel()
     val devices = DataDevices().loadDevices() // Obtén la lista de dispositivos
 
     // Launcher para permisos BLUETOOTH_CONNECT
@@ -69,7 +69,7 @@ fun BluetoothConnectionContent() {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
         // Botón para activar Bluetooth
-        FilledTonalButton(
+        Button(
             onClick = {
                 if (!bluetoothViewModel.bluetoothEnabled.value) {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -167,7 +167,7 @@ fun BluetoothConnectionContent() {
                 bluetoothViewModel.selectedDeviceName.value?.let { deviceName ->
                     bluetoothViewModel.selectedDeviceAddress.value?.let { macAddress ->
                         val bluetoothConfig = BluetoothConfiguration(
-                            tarjeta = deviceViewModel.getSelectedDeviceName(context, devices),
+                            tarjeta = deviceConfigViewModel.getSelectedDeviceName(context, devices),
                             nombreDispositivo = deviceName,
                             direccionMac = macAddress
                         )
@@ -192,7 +192,11 @@ fun BluetoothConnectionContent() {
                     Toast.makeText(context, "Selecciona un dispositivo primero", Toast.LENGTH_SHORT).show()
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.azul_fondo),
+                contentColor = colorResource(id = R.color.white)
+            )
         ) {
             Text("Guardar Dispositivo")
         }
