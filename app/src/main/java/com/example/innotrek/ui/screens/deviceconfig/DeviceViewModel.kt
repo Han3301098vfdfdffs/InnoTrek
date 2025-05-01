@@ -1,14 +1,12 @@
 package com.example.innotrek.ui.screens.deviceconfig
 
 import android.content.Context
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
-import com.example.innotrek.data.WifiConfiguration
 import com.example.innotrek.data.model.Device
 
 class DeviceViewModel : ViewModel() {

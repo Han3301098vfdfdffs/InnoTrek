@@ -11,8 +11,6 @@ import android.os.Build
 import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothManager
-import android.content.Intent
-import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
