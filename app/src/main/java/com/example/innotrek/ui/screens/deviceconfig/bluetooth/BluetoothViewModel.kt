@@ -174,14 +174,7 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         bluetoothEnabled.value = enabled
     }
 
-    fun buttonConfig(context: Context, enableBluetoothLauncher: ActivityResultLauncher<Intent>){
-        if (!bluetoothEnabled.value) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            enableBluetoothLauncher.launch(enableBtIntent)
-        } else {
-            context.startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
-        }
-    }
+
     val selectedDevice = mutableStateOf<String?>(null)
 
 

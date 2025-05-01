@@ -15,8 +15,6 @@ class DeviceViewModel : ViewModel() {
 
     val ipError = mutableStateOf<String?>(null)
     val portError = mutableStateOf<String?>(null)
-    private val _wifiConfigurations = mutableStateOf<List<WifiConfiguration>>(emptyList())
-    val wifiConfigurations: State<List<WifiConfiguration>> = _wifiConfigurations
 
     var selectedDeviceIndex by mutableIntStateOf(-1)
         private set
