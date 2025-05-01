@@ -33,29 +33,30 @@ import com.example.innotrek.R
 import com.example.innotrek.ui.screens.devices.bluetooth.BluetoothViewModel
 import com.example.innotrek.ui.screens.devices.bluetooth.rememberBluetoothPermissionLauncher
 import com.example.innotrek.ui.screens.devices.bluetooth.scanBluetoothPermissionLauncher
+import com.example.innotrek.ui.screens.devices.room.RoomViewModel
 
 @SuppressLint("ContextCastToActivity")
 @Composable
 fun BluetoothConnectionContent() {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
-    val viewModel: BluetoothViewModel = viewModel()
+    val bluetoothViewModel: BluetoothViewModel = viewModel()
 
     // Launcher para permisos BLUETOOTH_CONNECT
-    val connectPermissionLauncher = rememberBluetoothPermissionLauncher(viewModel, context)
+    val connectPermissionLauncher = rememberBluetoothPermissionLauncher(bluetoothViewModel, context)
 
     // Launcher para permisos BLUETOOTH_SCAN
-    val scanPermissionLauncher = scanBluetoothPermissionLauncher(viewModel, context, connectPermissionLauncher)
+    val scanPermissionLauncher = scanBluetoothPermissionLauncher(bluetoothViewModel, context, connectPermissionLauncher)
 
     // Launcher para activar Bluetooth
     val enableBluetoothLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        viewModel.updateBluetoothState(result.resultCode == Activity.RESULT_OK)
+        bluetoothViewModel.updateBluetoothState(result.resultCode == Activity.RESULT_OK)
     }
     // Verificar estado inicial
     LaunchedEffect(Unit) {
-        viewModel.checkBluetoothState(context)
+        bluetoothViewModel.checkBluetoothState(context)
     }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -63,7 +64,7 @@ fun BluetoothConnectionContent() {
         // Botón para activar Bluetooth
         FilledTonalButton(
             onClick = {
-                if (!viewModel.bluetoothEnabled.value) {
+                if (!bluetoothViewModel.bluetoothEnabled.value) {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                     enableBluetoothLauncher.launch(enableBtIntent)
                 } else {
@@ -76,13 +77,13 @@ fun BluetoothConnectionContent() {
                 contentColor = Color.White
             )
         ) {
-            Text(if (viewModel.bluetoothEnabled.value) "Abrir configuración Bluetooth" else "Activar Bluetooth")
+            Text(if (bluetoothViewModel.bluetoothEnabled.value) "Abrir configuración Bluetooth" else "Activar Bluetooth")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                viewModel.checkPermissionButton(context, activity, scanPermissionLauncher, connectPermissionLauncher)
+                bluetoothViewModel.checkPermissionButton(context, activity, scanPermissionLauncher, connectPermissionLauncher)
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
@@ -94,13 +95,14 @@ fun BluetoothConnectionContent() {
         }
 
         // Mostrar dispositivo seleccionado (si hay uno)
-        viewModel.selectedDevice.value?.let { device ->
+        bluetoothViewModel.selectedDevice.value?.let { device ->
             Spacer(modifier = Modifier.height(16.dp))
             Text("Dispositivo seleccionado:", style = MaterialTheme.typography.titleMedium)
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .clickable {
+                        bluetoothViewModel.selectDevice(device)
+                    }
             ) {
                 Text(
                     text = device,
@@ -108,13 +110,20 @@ fun BluetoothConnectionContent() {
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
+        }?: run {
+            if (bluetoothViewModel.bluetoothEnabled.value) {
+                Text(
+                    text = "No hay dispositivo seleccionado",
+                    color = Color.Red,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
         }
-
         // Mostrar dispositivos emparejados
-        if (viewModel.pairedDevices.isNotEmpty()) {
+        if (bluetoothViewModel.pairedDevices.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
             Text("Dispositivos emparejados:", style = MaterialTheme.typography.titleMedium)
-            viewModel.pairedDevices.forEach { device ->
+            bluetoothViewModel.pairedDevices.forEach { device ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,7 +134,7 @@ fun BluetoothConnectionContent() {
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                             .clickable {
-                                viewModel.selectDevice(device)
+                                bluetoothViewModel.selectDevice(device)
                             }
                     ) {
                         Text(
@@ -138,9 +147,9 @@ fun BluetoothConnectionContent() {
         }
 
         // Mostrar nuevos dispositivos encontrados
-        if (viewModel.devices.isNotEmpty()) {
+        if (bluetoothViewModel.devices.isNotEmpty()) {
             Text("Dispositivos encontrados:", style = MaterialTheme.typography.titleMedium)
-            viewModel.devices.forEach { device ->
+            bluetoothViewModel.devices.forEach { device ->
                 Text(device, modifier = Modifier.padding(vertical = 4.dp))
             }
         }

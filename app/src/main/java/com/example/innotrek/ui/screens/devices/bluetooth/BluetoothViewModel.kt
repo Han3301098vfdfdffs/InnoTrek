@@ -20,10 +20,23 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 
+
 class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
     val devices = mutableStateListOf<String>()
     val pairedDevices = mutableStateListOf<String>()
 
+    val isDeviceSelected = mutableStateOf(false)
+
+
+
+    fun selectDevice(device: String) {
+        selectedDevice.value = device
+    }
+
+    fun clearSelection() {
+        selectedDevice.value = null
+        isDeviceSelected.value = false
+    }
 
     private fun getBluetoothAdapter(context: Context): BluetoothAdapter? {
         val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
@@ -187,9 +200,10 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     }
     val selectedDevice = mutableStateOf<String?>(null)
 
-    // Función para seleccionar un dispositivo
-    fun selectDevice(device: String) {
-        selectedDevice.value = device
+
+    fun resetSelection() {
+        selectedDevice.value = null
+        isDeviceSelected.value = false
     }
 }
 

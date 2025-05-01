@@ -8,12 +8,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
+import com.example.innotrek.ui.screens.devices.room.RoomViewModel
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
 
 @Composable
-fun SaveButton(
-    enabled: Boolean,
+fun DeviceButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -21,19 +22,16 @@ fun SaveButton(
     val sizeHorizontalFont = 26.sp
 
     Button(
-        onClick = onClick,
-        modifier = modifier,
-        enabled = enabled,
+        onClick = { onClick },
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(id = R.color.azul_fondo),
-            contentColor = Color.White,
-            disabledContainerColor = Color.Gray,
-            disabledContentColor = Color.White.copy(alpha = 0.5f)
+            contentColor = Color.White
         )
     ) {
         Text(
-            text = "Guardar configuración",
+            text = "Mostrar datos en Logcat",
             fontSize = responsiveTextSize(sizeVerticalFont, sizeHorizontalFont)
         )
+
     }
 }
