@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.devices
+package com.example.innotrek.ui.screens.deviceconfig
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

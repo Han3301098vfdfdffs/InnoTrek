@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.components.devices
+package com.example.innotrek.ui.components.deviceconfig
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem

@@ -1,10 +1,11 @@
-package com.example.innotrek.ui.screens.devices
+package com.example.innotrek.ui.screens.deviceconfig.bluetooth
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -30,10 +31,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
-import com.example.innotrek.ui.screens.devices.bluetooth.BluetoothViewModel
-import com.example.innotrek.ui.screens.devices.bluetooth.rememberBluetoothPermissionLauncher
-import com.example.innotrek.ui.screens.devices.bluetooth.scanBluetoothPermissionLauncher
-import com.example.innotrek.ui.screens.devices.room.RoomViewModel
+import com.example.innotrek.data.BluetoothConfiguration
+import com.example.innotrek.data.DataDevices
+import com.example.innotrek.data.DatabaseProvider
+import com.example.innotrek.ui.screens.deviceconfig.DeviceViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("ContextCastToActivity")
 @Composable
@@ -41,6 +46,8 @@ fun BluetoothConnectionContent() {
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val bluetoothViewModel: BluetoothViewModel = viewModel()
+    val deviceViewModel: DeviceViewModel = viewModel()
+    val devices = DataDevices().loadDevices() // Obtén la lista de dispositivos
 
     // Launcher para permisos BLUETOOTH_CONNECT
     val connectPermissionLauncher = rememberBluetoothPermissionLauncher(bluetoothViewModel, context)
@@ -152,6 +159,42 @@ fun BluetoothConnectionContent() {
             bluetoothViewModel.devices.forEach { device ->
                 Text(device, modifier = Modifier.padding(vertical = 4.dp))
             }
+        }
+
+        Button(
+            onClick = {
+                // Validamos los campos antes de guardar
+                bluetoothViewModel.selectedDeviceName.value?.let { deviceName ->
+                    bluetoothViewModel.selectedDeviceAddress.value?.let { macAddress ->
+                        val bluetoothConfig = BluetoothConfiguration(
+                            tarjeta = deviceViewModel.getSelectedDeviceName(context, devices),
+                            nombreDispositivo = deviceName,
+                            direccionMac = macAddress
+                        )
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val db = DatabaseProvider.getDatabase(context)
+                                db.bluetoothConfigurationDao().insert(bluetoothConfig) // Asegúrate de que estás usando el DAO correcto
+
+                                // Opcional: Mostrar mensaje de éxito en el hilo principal
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, "Configuración Bluetooth guardada", Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: Exception) {
+                                // Manejar errores
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, "Error al guardar: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                } ?: run {
+                    Toast.makeText(context, "Selecciona un dispositivo primero", Toast.LENGTH_SHORT).show()
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Guardar Dispositivo")
         }
     }
 }

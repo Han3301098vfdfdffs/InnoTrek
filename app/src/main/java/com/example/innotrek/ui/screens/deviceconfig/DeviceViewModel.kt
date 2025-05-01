@@ -1,16 +1,22 @@
-package com.example.innotrek.ui.screens.devices
+package com.example.innotrek.ui.screens.deviceconfig
 
+import android.content.Context
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import com.example.innotrek.data.WifiConfiguration
+import com.example.innotrek.data.model.Device
 
 class DeviceViewModel : ViewModel() {
 
     val ipError = mutableStateOf<String?>(null)
     val portError = mutableStateOf<String?>(null)
+    private val _wifiConfigurations = mutableStateOf<List<WifiConfiguration>>(emptyList())
+    val wifiConfigurations: State<List<WifiConfiguration>> = _wifiConfigurations
 
     var selectedDeviceIndex by mutableIntStateOf(-1)
         private set
@@ -25,8 +31,6 @@ class DeviceViewModel : ViewModel() {
         private set
 
     val isBluetoothDeviceSelected = mutableStateOf(false) // Nuevo estado
-    val isFormValid = mutableStateOf(false)
-    val isConfigurationSaved = mutableStateOf(false)
 
 
     fun selectDevice(index: Int) {
@@ -87,47 +91,8 @@ class DeviceViewModel : ViewModel() {
         isBluetoothDeviceSelected.value = isSelected
     }
 
-    fun isFormValid(): Boolean {
-        return when (connectionType) {
-            "wifi" -> validateIpAddress(ipAddress.text) && validatePort(port.text)
-            "bluetooth" -> isBluetoothDeviceSelected.value
-            else -> false
-        }
+    fun getSelectedDeviceName(context: Context, devices: List<Device>): String {
+        return if (selectedDeviceIndex == -1) ""
+        else context.getString(devices[selectedDeviceIndex].deviceStringResourceId)
     }
-
-    fun resetAllSelections() {
-        // Resetear selección WiFi
-        ipAddress = TextFieldValue("")
-        port = TextFieldValue("")
-        ipError.value = null
-        portError.value = null
-
-        // Resetear selección Bluetooth
-        isBluetoothDeviceSelected.value = false
-
-        // Resetear selección de dispositivo
-        selectedDeviceIndex = -1
-        connectionType = ""
-    }
-
-    fun updateValidation(
-        connectionType: String,
-        ipValid: Boolean,
-        portValid: Boolean,
-        bluetoothDeviceSelected: Boolean
-    ) {
-        isFormValid.value = !isConfigurationSaved.value && when (connectionType) {
-            "wifi" -> ipValid && portValid
-            "bluetooth" -> bluetoothDeviceSelected
-            else -> false
-        }
-    }
-
-    fun saveConfiguration() {
-        if (!isFormValid.value) return
-        // Lógica de guardado...
-        isConfigurationSaved.value = true
-        isFormValid.value = false
-    }
-
 }

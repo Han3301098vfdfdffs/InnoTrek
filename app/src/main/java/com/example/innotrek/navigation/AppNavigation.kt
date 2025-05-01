@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.ui.screens.maps.MapScreen
-import com.example.innotrek.ui.screens.devices.DevicesScreen
+import com.example.innotrek.ui.screens.deviceconfig.DevicesScreen
 import com.example.innotrek.ui.screens.login.LoginScreen
 import com.example.innotrek.ui.screens.home.HomeScreen
 import com.example.innotrek.ui.screens.auth.RegisterScreen

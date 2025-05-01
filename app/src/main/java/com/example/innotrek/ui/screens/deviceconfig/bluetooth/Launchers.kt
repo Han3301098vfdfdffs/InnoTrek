@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.devices.bluetooth
+package com.example.innotrek.ui.screens.deviceconfig.bluetooth
 
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult

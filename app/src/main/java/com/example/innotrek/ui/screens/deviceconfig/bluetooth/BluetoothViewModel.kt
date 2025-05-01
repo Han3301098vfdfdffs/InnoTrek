@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.devices.bluetooth
+package com.example.innotrek.ui.screens.deviceconfig.bluetooth
 
 import android.app.Activity
 import android.app.Application
@@ -24,18 +24,18 @@ import androidx.lifecycle.AndroidViewModel
 class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
     val devices = mutableStateListOf<String>()
     val pairedDevices = mutableStateListOf<String>()
-
     val isDeviceSelected = mutableStateOf(false)
+    val selectedDeviceName = mutableStateOf<String?>(null)
+    val selectedDeviceAddress = mutableStateOf<String?>(null)
 
-
-
-    fun selectDevice(device: String) {
-        selectedDevice.value = device
-    }
-
-    fun clearSelection() {
-        selectedDevice.value = null
-        isDeviceSelected.value = false
+    fun selectDevice(deviceInfo: String) {
+        // El formato es "Nombre - Dirección MAC"
+        val parts = deviceInfo.split(" - ")
+        if (parts.size == 2) {
+            selectedDeviceName.value = parts[0]
+            selectedDeviceAddress.value = parts[1]
+            selectedDevice.value = deviceInfo
+        }
     }
 
     private fun getBluetoothAdapter(context: Context): BluetoothAdapter? {
@@ -160,8 +160,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 100
     }
 
-    //Boton Abrir Configuracion
-
     // Estado del Bluetooth
     val bluetoothEnabled = mutableStateOf(false)
 
@@ -169,20 +167,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     fun checkBluetoothState(context: Context) {
         val bluetoothAdapter = getBluetoothAdapter(context)
         bluetoothEnabled.value = bluetoothAdapter?.isEnabled == true
-    }
-
-    // Manejar la acción del botón
-    fun handleBluetoothButtonAction(
-        context: Context,
-        activity: Activity,
-        enableBluetoothLauncher: ActivityResultLauncher<Intent>
-    ) {
-        if (!bluetoothEnabled.value) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            enableBluetoothLauncher.launch(enableBtIntent)
-        } else {
-            context.startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
-        }
     }
 
     // Actualizar estado cuando se activa/desactiva Bluetooth

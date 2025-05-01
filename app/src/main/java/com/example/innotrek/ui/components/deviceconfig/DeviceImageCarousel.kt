@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.components.devices
+package com.example.innotrek.ui.components.deviceconfig
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image

@@ -1,6 +1,5 @@
-package com.example.innotrek.ui.components.devices
+package com.example.innotrek.ui.components.deviceconfig
 
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -27,21 +25,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.data.DataDevices
-import com.example.innotrek.data.model.Device
 import com.example.innotrek.ui.components.common.WarningMessage
-import com.example.innotrek.ui.screens.devices.BluetoothConnectionContent
-import com.example.innotrek.ui.screens.devices.ConnectionTypeSelector
-import com.example.innotrek.ui.screens.devices.DeviceViewModel
-import com.example.innotrek.ui.screens.devices.WifiConnectionContent
-import com.example.innotrek.ui.screens.devices.bluetooth.BluetoothViewModel
-import com.example.innotrek.ui.screens.devices.room.RoomViewModel
+import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothConnectionContent
+import com.example.innotrek.ui.screens.deviceconfig.ConnectionTypeSelector
+import com.example.innotrek.ui.screens.deviceconfig.DeviceViewModel
+import com.example.innotrek.ui.screens.deviceconfig.wifi.WifiConnectionContent
+import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothViewModel
 
 
 @Composable
 fun DeviceContent() {
-    val devices = DataDevices().loadDevices()
+    val devices = DataDevices().loadDevices() // Obtén la lista de dispositivos
     val deviceViewModel: DeviceViewModel = viewModel()
-    val roomViewModel: RoomViewModel = viewModel()
     val bluetoothViewModel: BluetoothViewModel = viewModel()
 
     // Estado para controlar si mostrar el mensaje de advertencia
@@ -107,16 +102,6 @@ fun DeviceContent() {
         if (showDeviceNotSelectedWarning.value) {
             WarningMessage("Por favor, selecciona un dispositivo primero")
         }
-        SaveButton(
-            enabled = deviceViewModel.isFormValid(),
-            onClick = {
-                roomViewModel.debugDevices()
-                roomViewModel.debugConnections()
-                deviceViewModel.saveConfiguration()
-                bluetoothViewModel.resetSelection()
-                deviceViewModel.resetAllSelections()
-            }
-        )
     }
 }
 
