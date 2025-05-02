@@ -33,6 +33,7 @@ import com.example.innotrek.ui.components.auth.AuthTextField
 import com.example.innotrek.ui.components.common.BackButton
 import com.example.innotrek.ui.components.common.LogoImage
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.innotrek.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreen(

@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens
+package com.example.innotrek.ui.screens.deviceconfig
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -7,21 +7,33 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.terminal.TerminalContent
+import com.example.innotrek.ui.components.common.TopAppBar
+import com.example.innotrek.ui.components.deviceconfig.DeviceConfigContent
+import com.example.innotrek.viewmodel.BluetoothViewModel
+import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun ExampleScreen(navController: NavController) {
-
+fun DeviceConfigScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val deviceConfigViewModel: DeviceConfigViewModel = viewModel()
+    val bluetoothViewModel: BluetoothViewModel = viewModel()
 
+    // Sincroniza el estado de selección Bluetooth
+    LaunchedEffect(bluetoothViewModel.selectedDevice.value) {
+        deviceConfigViewModel.updateBluetoothSelectionStatus(
+            bluetoothViewModel.selectedDevice.value != null
+        )
+    }
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -33,13 +45,14 @@ fun ExampleScreen(navController: NavController) {
     ) {
         Scaffold(
             topBar = {
-                com.example.innotrek.ui.components.common.TopAppBar(
-                    title = "Dispositivos",
+                TopAppBar(
+                    title = "Configuración de Dispositivos",
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
+                DeviceConfigContent()
             }
         }
     }
@@ -47,11 +60,6 @@ fun ExampleScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewExampleScreen() {
-    // Para preview puedes pasar un NavController falso o null-check dentro
-    ExampleScreen(
-        navController = rememberNavController(),
-        //onSaveDevice = { /* ejemplo */ },
-        //onNavigateBack = { /* ejemplo */ }
-    )
+fun DeviceConfigScreenPreview() {
+    DeviceConfigScreen(navController = rememberNavController())
 }

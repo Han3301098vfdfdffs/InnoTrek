@@ -24,6 +24,7 @@ import com.example.innotrek.ui.components.login.GoogleLoginButton
 import com.example.innotrek.ui.components.login.LoginButton
 import com.example.innotrek.ui.components.login.PasswordField
 import com.example.innotrek.ui.components.login.SignUpPrompt
+import com.example.innotrek.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(navController: NavController) {

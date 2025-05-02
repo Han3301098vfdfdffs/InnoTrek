@@ -10,39 +10,66 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawerContent(
     navController: NavController,
-    onItemSelected: () -> Unit = {}  // Callback al seleccionar un ítem
+    coroutineScope: CoroutineScope? = null,
+    onItemSelected: () -> Unit = {}
 ) {
-    val items = listOf(
+    val drawerItems = listOf(
         AppScreens.HomeScreen to "Inicio",
         AppScreens.MapScreen to "Mapa",
-        AppScreens.DeviceScreen to "Configuración Dispositivo"
+        AppScreens.DeviceScreen to "Dispositivos",
+        AppScreens.DeviceConfigScreen to "Configuración Dispositivo",
+        AppScreens.TerminalScreen to "Terminal"
     )
 
     ModalDrawerSheet {
-        Text("Menú", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
+        Text(
+            text = "Menú",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp)
+        )
         HorizontalDivider()
 
-        items.forEach { (screen, label) ->
-            val isCurrentDestination = navController.currentDestination?.route == screen.route
+        drawerItems.forEach { (screen, label) ->
+            val isSelected = navController.currentDestination?.route == screen.route
 
             NavigationDrawerItem(
-                label = { Text(label) },
-                selected = isCurrentDestination,
+                label = { Text(text = label) },
+                selected = isSelected,
                 onClick = {
-                    if (!isCurrentDestination) {
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                    coroutineScope?.launch {
+                        if (!isSelected) {
+                            navController.navigate(screen.route) {
+                                when {
+                                    // Para pantallas principales (excepto configuración)
+                                    screen.route != AppScreens.DeviceConfigScreen.route -> {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                    }
+                                    // Para DeviceConfigScreen (navegación simple)
+                                    else -> {
+                                        // No hacemos popUpTo para permitir volver atrás
+                                    }
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
+                        onItemSelected() // Cierra el drawer y/o ejecuta callback
+                    } ?: run {
+                        // Manejo alternativo sin CoroutineScope
+                        navController.navigate(screen.route) {
+                            launchSingleTop = true
+                        }
+                        onItemSelected()
                     }
-                    onItemSelected()  // Siempre cierra el Drawer (tanto para ítem actual como otros)
                 },
                 modifier = Modifier.padding(horizontal = 12.dp)
             )

@@ -20,7 +20,11 @@ fun HomeDrawer(
         drawerContent = {
             NavigationDrawerContent(
                 navController = navController,
-                onItemSelected = { coroutineScope.launch { drawerState.close() } }
+                onItemSelected = {
+                    coroutineScope.launch {
+                        drawerState.close()
+                    }
+                }
             )
         }
     ) {
