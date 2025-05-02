@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,8 @@ import com.example.innotrek.R
 import com.example.innotrek.data.BluetoothConfiguration
 import com.example.innotrek.data.DataDevices
 import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
+import com.example.innotrek.viewmodel.DeviceConfigViewModel
+import com.example.innotrek.viewmodel.BluetoothViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

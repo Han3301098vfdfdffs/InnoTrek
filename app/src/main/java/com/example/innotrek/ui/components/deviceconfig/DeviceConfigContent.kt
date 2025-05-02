@@ -28,9 +28,9 @@ import com.example.innotrek.data.DataDevices
 import com.example.innotrek.ui.components.common.WarningMessage
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothConnectionContent
 import com.example.innotrek.ui.screens.deviceconfig.ConnectionTypeSelector
-import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
+import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import com.example.innotrek.ui.screens.deviceconfig.wifi.WifiConnectionContent
-import com.example.innotrek.ui.screens.deviceconfig.bluetooth.BluetoothViewModel
+import com.example.innotrek.viewmodel.BluetoothViewModel
 
 
 @Composable

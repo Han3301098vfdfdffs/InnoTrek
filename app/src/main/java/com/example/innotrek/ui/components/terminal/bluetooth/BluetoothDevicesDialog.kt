@@ -1,70 +1,23 @@
-package com.example.innotrek.ui.components.terminal
+package com.example.innotrek.ui.components.terminal.bluetooth
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.innotrek.R
 import com.example.innotrek.data.BluetoothConfiguration
-import com.example.innotrek.data.DatabaseProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-@Composable
-fun BluetoothTerminal() {
-    var showDialog by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-    val database = remember { DatabaseProvider.getDatabase(context) }
-    val bluetoothDevices = remember { mutableStateOf<List<BluetoothConfiguration>>(emptyList()) }
-    val coroutineScope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = {
-                coroutineScope.launch {
-                    val devices = withContext(Dispatchers.IO) {
-                        database.bluetoothConfigurationDao().getAll()
-                    }
-                    bluetoothDevices.value = devices
-                    showDialog = true
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.azul_fondo),
-                contentColor = colorResource(id = R.color.white)
-            )
-        ) {
-            Text("Selecciona Dispositivo")
-        }
-    }
-
-    if (showDialog) {
-        BluetoothDevicesDialog(
-            devices = bluetoothDevices.value,
-            onDismiss = { showDialog = false }
-        )
-    }
-}
 
 @Composable
 fun BluetoothDevicesDialog(
     devices: List<BluetoothConfiguration>,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onDeviceSelected: (BluetoothConfiguration) -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -90,13 +43,28 @@ fun BluetoothDevicesDialog(
                 } else {
                     LazyColumn {
                         items(devices) { device ->
-                            Text(
-                                text = device.nombreDispositivo,
+                            Card(
+                                onClick = { onDeviceSelected(device) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 8.dp)
-                            )
-                            Divider()
+                                    .padding(vertical = 4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = colorResource(id = R.color.azul_claro)
+                                )
+                            ) {
+                                Column(modifier = Modifier.padding(16.dp)) {
+                                    Text(
+                                        text = device.nombreDispositivo,
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = device.direccionMac,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = colorResource(id = R.color.black)
+                                    )
+                                }
+                            }
+                            HorizontalDivider()
                         }
                     }
                 }

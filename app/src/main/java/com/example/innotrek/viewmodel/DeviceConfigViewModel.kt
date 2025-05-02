@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.deviceconfig
+package com.example.innotrek.viewmodel
 
 import android.content.Context
 import androidx.compose.runtime.getValue

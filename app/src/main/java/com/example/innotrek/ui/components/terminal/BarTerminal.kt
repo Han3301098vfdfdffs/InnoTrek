@@ -2,6 +2,7 @@ package com.example.innotrek.ui.components.terminal
 
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,27 +26,60 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.innotrek.R
 import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.navigation.AppScreens
-import com.example.innotrek.ui.components.device.BluetoothScreenContent
+import com.example.innotrek.data.WifiConfiguration
 import com.example.innotrek.ui.components.device.ConnectionScreen
-import com.example.innotrek.ui.components.device.WifiScreenContent
+import com.example.innotrek.ui.components.terminal.bluetooth.BluetoothTerminal
+import com.example.innotrek.ui.components.terminal.wifi.WifiConnectionState
+import com.example.innotrek.ui.components.terminal.wifi.WifiTerminal
+import com.example.innotrek.viewmodel.BluetoothViewModel
+import com.example.innotrek.viewmodel.WifiViewModel
+import kotlinx.coroutines.delay
+import kotlin.random.Random
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun BarTerminal(navController: NavController) {
     var activeScreen by remember { mutableStateOf(ConnectionScreen.WIFI) }
     val context = LocalContext.current
     val database = remember { DatabaseProvider.getDatabase(context) }
+    val bluetoothViewModel: BluetoothViewModel = viewModel()
+
+    // 1. Estado de la conexión WiFi (inicialmente desconectado)
+    var wifiState by remember { mutableStateOf<WifiConnectionState>(WifiConnectionState.Disconnected) }
+
+    // 2. Dispositivo seleccionado (inicialmente nulo)
+    var selectedDevice by remember { mutableStateOf<WifiConfiguration?>(null) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (activeScreen) {
             ConnectionScreen.WIFI -> {
-                WifiTerminal()
+                WifiTerminal(
+                    connectionState = wifiState, // Estado actual de la conexión
+                    onDeviceSelected = { device ->
+                        selectedDevice = device // Guarda el dispositivo seleccionado
+                    },
+                    onConnectClicked = {
+                        // Lógica para conectar (simulada o real)
+                        wifiState = WifiConnectionState.Connecting // Cambia a "Conectando..."
+                    }
+                )
             }
             ConnectionScreen.BLUETOOTH -> {
-                BluetoothTerminal()
+                BluetoothTerminal(
+                    connectionState = bluetoothViewModel.connectionState.value,
+                    onDeviceSelected = { device ->
+                        bluetoothViewModel.selectedDeviceAddress.value = device.direccionMac
+                    },
+                    onConnectClicked = {
+                        bluetoothViewModel.selectedDeviceAddress.value?.let { mac ->
+                            bluetoothViewModel.connectToDeviceByMac(context, mac)
+                        }
+                    }
+                )
             }
         }
 

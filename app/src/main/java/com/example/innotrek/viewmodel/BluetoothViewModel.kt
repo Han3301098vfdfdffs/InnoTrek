@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.deviceconfig.bluetooth
+package com.example.innotrek.viewmodel
 
 import android.app.Activity
 import android.app.Application
@@ -11,23 +11,145 @@ import android.os.Build
 import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothSocket
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.IOException
+import java.util.UUID
 
 class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
+    // Estados existentes
     val devices = mutableStateListOf<String>()
     val pairedDevices = mutableStateListOf<String>()
     val isDeviceSelected = mutableStateOf(false)
     val selectedDeviceName = mutableStateOf<String?>(null)
     val selectedDeviceAddress = mutableStateOf<String?>(null)
+    val selectedDevice = mutableStateOf<String?>(null)
+    val bluetoothEnabled = mutableStateOf(false)
+    val connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
 
+    // UUID para SPP (Serial Port Profile)
+    private val sppUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+
+    // Socket y estado de conexión
+    private var bluetoothSocket: BluetoothSocket? = null
+
+    sealed class ConnectionState {
+        object Disconnected : ConnectionState()
+        object Connecting : ConnectionState()
+        object Connected : ConnectionState()
+        data class Error(val message: String) : ConnectionState()
+    }
+
+
+
+    // Función para conectar a un dispositivo por dirección MAC
+    fun connectToDeviceByMac(context: Context, macAddress: String) {
+        if (!hasBluetoothPermissions(context)) {
+            connectionState.value = ConnectionState.Error("Permisos de Bluetooth no concedidos")
+            return
+        }
+
+        val bluetoothAdapter = getBluetoothAdapter(context) ?: run {
+            connectionState.value = ConnectionState.Error("Bluetooth no disponible")
+            return
+        }
+
+        if (!bluetoothAdapter.isEnabled) {
+            connectionState.value = ConnectionState.Error("Bluetooth está desactivado")
+            return
+        }
+
+        connectionState.value = ConnectionState.Connecting
+
+        try {
+            // Obtener el dispositivo Bluetooth por su dirección MAC
+            val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                    bluetoothAdapter.getRemoteDevice(macAddress)
+                } else {
+                    connectionState.value =
+                        ConnectionState.Error("Permiso BLUETOOTH_CONNECT requerido")
+                    return
+                }
+            } else {
+                bluetoothAdapter.getRemoteDevice(macAddress)
+            }
+
+            // Crear un socket seguro RFCOMM
+            val socket = device.createRfcommSocketToServiceRecord(sppUUID)
+            bluetoothSocket = socket
+
+            // Cancelar descubrimiento para mejorar la conexión
+            bluetoothAdapter.cancelDiscovery()
+
+            // Conectar en un hilo separado para no bloquear la UI
+            Thread {
+                try {
+                    socket.connect()
+                    connectionState.value = ConnectionState.Connected
+                    Log.d("BluetoothViewModel", "Conectado a ${device.name ?: "dispositivo desconocido"}")
+                } catch (e: IOException) {
+                    Log.e("BluetoothViewModel", "Error al conectar: ${e.message}")
+                    connectionState.value = ConnectionState.Error("Error de conexión: ${e.message}")
+                    try {
+                        socket.close()
+                    } catch (closeException: IOException) {
+                        Log.e("BluetoothViewModel", "Error al cerrar socket: ${closeException.message}")
+                    }
+                }
+            }.start()
+
+        } catch (e: SecurityException) {
+            connectionState.value = ConnectionState.Error("Permisos insuficientes: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            connectionState.value = ConnectionState.Error("Dirección MAC inválida")
+        } catch (e: Exception) {
+            connectionState.value = ConnectionState.Error("Error inesperado: ${e.message}")
+        }
+    }
+
+    // Función para desconectar
+    fun disconnect() {
+        try {
+            bluetoothSocket?.close()
+            connectionState.value = ConnectionState.Disconnected
+        } catch (e: IOException) {
+            Log.e("BluetoothViewModel", "Error al desconectar: ${e.message}")
+            connectionState.value = ConnectionState.Error("Error al desconectar: ${e.message}")
+        }
+        bluetoothSocket = null
+    }
+
+    // Función para enviar datos (opcional)
+    fun sendData(data: String) {
+        if (connectionState.value != ConnectionState.Connected) {
+            Log.e("BluetoothViewModel", "No conectado, no se puede enviar datos")
+            return
+        }
+
+        bluetoothSocket?.let { socket ->
+            try {
+                val outputStream = socket.outputStream
+                outputStream.write(data.toByteArray())
+                outputStream.flush()
+                Log.d("BluetoothViewModel", "Datos enviados: $data")
+            } catch (e: IOException) {
+                Log.e("BluetoothViewModel", "Error al enviar datos: ${e.message}")
+                connectionState.value = ConnectionState.Error("Error de comunicación: ${e.message}")
+                disconnect()
+            }
+        }
+    }
+
+    // Funciones existentes (se mantienen igual)
     fun selectDevice(deviceInfo: String) {
-        // El formato es "Nombre - Dirección MAC"
         val parts = deviceInfo.split(" - ")
         if (parts.size == 2) {
             selectedDeviceName.value = parts[0]
@@ -44,7 +166,7 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     private fun checkPermission(
         context: Context,
         connectPermissionLauncher: ActivityResultLauncher<String>? = null
-    ){
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -56,7 +178,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
             }
         }
     }
-
 
     fun loadPairedDevices(context: Context) {
         pairedDevices.clear()
@@ -114,7 +235,7 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         activity: Activity,
         scanPermissionLauncher: ActivityResultLauncher<String>,
         connectPermissionLauncher: ActivityResultLauncher<String>
-    ){
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (hasBluetoothPermissions(context)) {
                 loadPairedDevices(context)
@@ -153,32 +274,26 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    companion object {
-        // Código de solicitud de permisos
-        private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 100
-    }
-
-    // Estado del Bluetooth
-    val bluetoothEnabled = mutableStateOf(false)
-
-    // Verificar estado del Bluetooth
     fun checkBluetoothState(context: Context) {
         val bluetoothAdapter = getBluetoothAdapter(context)
         bluetoothEnabled.value = bluetoothAdapter?.isEnabled == true
     }
 
-    // Actualizar estado cuando se activa/desactiva Bluetooth
     fun updateBluetoothState(enabled: Boolean) {
         bluetoothEnabled.value = enabled
     }
-
-
-    val selectedDevice = mutableStateOf<String?>(null)
-
 
     fun resetSelection() {
         selectedDevice.value = null
         isDeviceSelected.value = false
     }
-}
 
+    companion object {
+        private const val BLUETOOTH_PERMISSION_REQUEST_CODE = 100
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disconnect()
+    }
+}

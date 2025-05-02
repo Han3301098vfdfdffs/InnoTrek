@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.login
+package com.example.innotrek.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

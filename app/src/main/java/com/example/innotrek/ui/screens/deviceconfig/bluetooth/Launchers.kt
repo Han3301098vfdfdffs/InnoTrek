@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import com.example.innotrek.viewmodel.BluetoothViewModel
 
 @Composable
 fun rememberBluetoothPermissionLauncher(

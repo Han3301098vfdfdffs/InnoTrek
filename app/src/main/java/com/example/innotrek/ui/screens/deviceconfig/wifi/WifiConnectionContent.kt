@@ -18,7 +18,7 @@ import com.example.innotrek.R
 import com.example.innotrek.data.DataDevices
 import com.example.innotrek.data.DatabaseProvider
 import com.example.innotrek.data.WifiConfiguration
-import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigViewModel
+import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

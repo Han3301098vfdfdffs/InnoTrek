@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.screens.maps
+package com.example.innotrek.viewmodel
 
 import android.Manifest
 import android.app.Activity

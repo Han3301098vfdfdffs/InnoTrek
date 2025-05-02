@@ -10,4 +10,12 @@
     <color name="azul_claro">#0277BD</color>
     <color name="azul_fondo">#063661</color>
     <color name="azul_texto">#FF3F51B5</color>
+
+    <!-- Colores para el indicador de estado -->
+    <color name="verde_exito">#4CAF50</color> <!-- Verde para conexión exitosa -->
+    <color name="rojo_error">#F44336</color>  <!-- Rojo para error de conexión -->
+    <color name="gris_desactivado">#9E9E9E</color> <!-- Gris para estado inactivo -->
+    <color name="gris_oscuro">#616161</color> <!-- Gris para texto secundario -->
+    <color name="amarillo_conectando">#FFC107</color>
+
 </resources>
