@@ -127,27 +127,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         bluetoothSocket = null
     }
 
-    // Función para enviar datos (opcional)
-    fun sendData(data: String) {
-        if (connectionState.value != ConnectionState.Connected) {
-            Log.e("BluetoothViewModel", "No conectado, no se puede enviar datos")
-            return
-        }
-
-        bluetoothSocket?.let { socket ->
-            try {
-                val outputStream = socket.outputStream
-                outputStream.write(data.toByteArray())
-                outputStream.flush()
-                Log.d("BluetoothViewModel", "Datos enviados: $data")
-            } catch (e: IOException) {
-                Log.e("BluetoothViewModel", "Error al enviar datos: ${e.message}")
-                connectionState.value = ConnectionState.Error("Error de comunicación: ${e.message}")
-                disconnect()
-            }
-        }
-    }
-
     // Funciones existentes (se mantienen igual)
     fun selectDevice(deviceInfo: String) {
         val parts = deviceInfo.split(" - ")

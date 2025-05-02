@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,16 +35,12 @@ import com.example.innotrek.ui.components.terminal.bluetooth.BluetoothTerminal
 import com.example.innotrek.ui.components.terminal.wifi.WifiConnectionState
 import com.example.innotrek.ui.components.terminal.wifi.WifiTerminal
 import com.example.innotrek.viewmodel.BluetoothViewModel
-import com.example.innotrek.viewmodel.WifiViewModel
-import kotlinx.coroutines.delay
-import kotlin.random.Random
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun BarTerminal(navController: NavController) {
     var activeScreen by remember { mutableStateOf(ConnectionScreen.WIFI) }
     val context = LocalContext.current
-    val database = remember { DatabaseProvider.getDatabase(context) }
     val bluetoothViewModel: BluetoothViewModel = viewModel()
 
     // 1. Estado de la conexión WiFi (inicialmente desconectado)
