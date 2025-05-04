@@ -1,8 +1,9 @@
 package com.example.innotrek.ui.components.terminal.wifi
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -14,25 +15,31 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TerminalDisplay(
     messages: List<String>,
-    modifier: Modifier = Modifier
+    scrollState: ScrollState,
 ) {
+    Text(
+        text = "Terminal",
+        style = MaterialTheme.typography.titleMedium
+    )
     Surface(
-        modifier = modifier,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Color.Gray),
         color = Color.Black,
         shape = MaterialTheme.shapes.medium
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(8.dp),
-            reverseLayout = true
+                .padding(8.dp)
+                .verticalScroll(scrollState),
         ) {
-            items(messages.reversed()) { message ->
+            messages.forEach { message ->
                 Text(
-                    text = "> $message",
+                    text = message,
+                    modifier = Modifier.padding(4.dp),
                     color = Color.White,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
