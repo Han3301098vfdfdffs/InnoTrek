@@ -14,16 +14,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.innotrek.ui.components.login.LoginHeader
+import com.example.innotrek.ui.screens.login.components.LoginHeader
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.innotrek.ui.components.common.LogoImage
-import com.example.innotrek.ui.components.login.EmailField
-import com.example.innotrek.ui.components.login.ErrorDialog
-import com.example.innotrek.ui.components.login.GoogleLoginButton
-import com.example.innotrek.ui.components.login.LoginButton
-import com.example.innotrek.ui.components.login.PasswordField
-import com.example.innotrek.ui.components.login.SignUpPrompt
+import com.example.innotrek.ui.screens.common.LogoImage
+import com.example.innotrek.ui.screens.login.components.EmailField
+import com.example.innotrek.ui.screens.login.components.ErrorDialog
+import com.example.innotrek.ui.screens.login.components.GoogleLoginButton
+import com.example.innotrek.ui.screens.login.components.LoginButton
+import com.example.innotrek.ui.screens.login.components.PasswordField
+import com.example.innotrek.ui.screens.login.components.SignUpPrompt
 import com.example.innotrek.viewmodel.LoginViewModel
 
 @Composable

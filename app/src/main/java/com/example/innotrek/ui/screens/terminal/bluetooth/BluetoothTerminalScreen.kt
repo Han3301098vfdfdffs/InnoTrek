@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
-import com.example.innotrek.data.BluetoothConfiguration
-import com.example.innotrek.data.DatabaseProvider
+import com.example.innotrek.data.room.BluetoothConfiguration
+import com.example.innotrek.data.room.DatabaseProvider
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.rememberBluetoothPermissionLauncher
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.scanBluetoothPermissionLauncher
 import com.example.innotrek.ui.utils.composables.responsiveTextSize

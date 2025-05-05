@@ -1,8 +1,5 @@
-package com.example.innotrek.ui.screens.terminal
+package com.example.innotrek.ui.screens.device.components
 
-import android.annotation.SuppressLint
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -22,39 +19,43 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.innotrek.R
-import com.example.innotrek.ui.screens.device.components.ConnectionScreen
-import com.example.innotrek.ui.screens.terminal.bluetooth.BluetoothTerminalScreen
-import com.example.innotrek.ui.screens.terminal.wifi.WifiTerminalScreen
-import com.example.innotrek.viewmodel.TerminalViewModel
+import com.example.innotrek.data.room.DatabaseProvider
+import com.example.innotrek.navigation.AppScreens
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun BarTerminal() {
+fun BarWifiBlue(navController: NavController) {
     var activeScreen by remember { mutableStateOf(ConnectionScreen.WIFI) }
-    val terminalViewModel: TerminalViewModel = viewModel()
+    val context = LocalContext.current
+    val database = remember { DatabaseProvider.getDatabase(context) }
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-        } else {
-        }
-    }
     Box(modifier = Modifier.fillMaxSize()) {
         when (activeScreen) {
             ConnectionScreen.WIFI -> {
-                WifiTerminalScreen(viewModel = terminalViewModel)
+                WifiScreenContent(
+                    database = database,
+                    onDelete = {
+                        // Opcional: Mostrar un Snackbar de confirmación
+                    },
+                    onAddDevice = {
+                        navController.navigate(AppScreens.DeviceConfigScreen.route)
+                    }
+                )
             }
             ConnectionScreen.BLUETOOTH -> {
-                BluetoothTerminalScreen(
-                    requestPermission = { permission ->
-                        requestPermissionLauncher.launch(permission)
+                BluetoothScreenContent(
+                    database = database,
+                    onDelete = {
+                        // Opcional: Mostrar un Snackbar de confirmación
+                    },
+                    onAddDevice = {
+                        navController.navigate(AppScreens.DeviceConfigScreen.route)
                     }
-                    )
+                )
             }
         }
 

@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
-import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.data.WifiConfiguration
+import com.example.innotrek.data.room.DatabaseProvider
+import com.example.innotrek.data.room.WifiConfiguration
 import com.example.innotrek.ui.screens.terminal.TcpClient
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
 import com.example.innotrek.viewmodel.TerminalViewModel

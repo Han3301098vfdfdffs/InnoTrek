@@ -15,9 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.innotrek.data.DataMaps
-import com.example.innotrek.ui.components.maps.MapContent
+import com.example.innotrek.ui.screens.maps.components.MapContent
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.common.TopAppBar
+import com.example.innotrek.ui.screens.common.TopAppBar
 import com.example.innotrek.viewmodel.MapViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng

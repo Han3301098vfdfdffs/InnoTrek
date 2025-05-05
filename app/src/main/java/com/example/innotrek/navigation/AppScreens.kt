@@ -11,6 +11,7 @@ sealed class AppScreens(val route: String) {
     object DeviceConfigScreen: AppScreens("deviceconfig_screen")
     object DeviceScreen: AppScreens("device_screen")
     object TerminalScreen: AppScreens("terminal_screen")
+    object GraphScreen: AppScreens("graph_screen")
 
     // Función para evitar rutas mal escritas
     companion object {
@@ -23,6 +24,7 @@ sealed class AppScreens(val route: String) {
             DeviceConfigScreen.route -> DeviceConfigScreen
             DeviceScreen.route -> DeviceScreen
             TerminalScreen.route -> TerminalScreen
+            GraphScreen.route -> GraphScreen
 
             null -> HomeScreen  // Ruta por defecto
             else -> throw IllegalArgumentException("Ruta '$route' no reconocida")

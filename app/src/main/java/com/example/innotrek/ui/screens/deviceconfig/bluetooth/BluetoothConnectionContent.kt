@@ -30,9 +30,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
-import com.example.innotrek.data.BluetoothConfiguration
+import com.example.innotrek.data.room.BluetoothConfiguration
 import com.example.innotrek.data.DataDevices
-import com.example.innotrek.data.DatabaseProvider
+import com.example.innotrek.data.room.DatabaseProvider
 import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import com.example.innotrek.viewmodel.BluetoothViewModel
 import kotlinx.coroutines.CoroutineScope
