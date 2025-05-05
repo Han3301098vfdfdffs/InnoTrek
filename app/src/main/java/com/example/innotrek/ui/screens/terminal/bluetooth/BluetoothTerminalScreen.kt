@@ -28,7 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.R
 import com.example.innotrek.data.BluetoothConfiguration
 import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.data.WifiConfiguration
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.rememberBluetoothPermissionLauncher
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.scanBluetoothPermissionLauncher
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
@@ -75,13 +74,6 @@ fun BluetoothTerminalScreen(
 
     val connectPermissionLauncher = rememberBluetoothPermissionLauncher(bluetoothViewModel, context)
     val scanPermissionLauncher = scanBluetoothPermissionLauncher(bluetoothViewModel, context, connectPermissionLauncher)
-
-    // Launcher para activar Bluetooth
-    val enableBluetoothLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        bluetoothViewModel.updateBluetoothState(result.resultCode == Activity.RESULT_OK)
-    }
 
     // Verificar estado inicial
     LaunchedEffect(Unit) {
@@ -336,7 +328,6 @@ private fun BluetoothConnectionStatusIndicator(connectionState: BluetoothViewMod
                         is BluetoothViewModel.ConnectionState.Connecting -> Color.Yellow
                         is BluetoothViewModel.ConnectionState.Connected -> Color.Green
                         is BluetoothViewModel.ConnectionState.Error -> Color.Red
-                        else -> Color.Gray
                     },
                     shape = CircleShape
                 )

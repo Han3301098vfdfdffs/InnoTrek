@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.UUID
 
@@ -326,9 +325,5 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     override fun onCleared() {
         super.onCleared()
         disconnect()
-    }
-
-    fun getBluetoothSocket(): BluetoothSocket? {
-        return bluetoothSocket
     }
 }

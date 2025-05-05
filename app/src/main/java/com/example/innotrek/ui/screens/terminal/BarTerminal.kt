@@ -36,19 +36,15 @@ import com.example.innotrek.viewmodel.TerminalViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun BarTerminal(navController: NavController) {
+fun BarTerminal() {
     var activeScreen by remember { mutableStateOf(ConnectionScreen.WIFI) }
-    val context = LocalContext.current
-    val bluetoothViewModel: BluetoothViewModel = viewModel()
     val terminalViewModel: TerminalViewModel = viewModel()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Permiso concedido, puedes realizar acciones relacionadas con Bluetooth
         } else {
-            // Permiso denegado, manejar según sea necesario
         }
     }
     Box(modifier = Modifier.fillMaxSize()) {
