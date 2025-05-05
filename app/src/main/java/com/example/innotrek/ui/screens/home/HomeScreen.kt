@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.innotrek.ui.components.common.TopAppBar
-import com.example.innotrek.ui.components.home.HomeContent
-import com.example.innotrek.ui.components.home.HomeDrawer
+import com.example.innotrek.ui.screens.common.TopAppBar
+import com.example.innotrek.ui.screens.home.components.HomeContent
+import com.example.innotrek.ui.screens.home.components.HomeDrawer
 import kotlinx.coroutines.launch
 
 @Composable
@@ -19,7 +19,6 @@ fun HomeScreen(navController: NavController) {
     // Estado del drawer
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     HomeDrawer(
         drawerState = drawerState,
         navController = navController,

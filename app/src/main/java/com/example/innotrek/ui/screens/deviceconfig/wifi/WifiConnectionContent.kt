@@ -16,8 +16,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.example.innotrek.R
 import com.example.innotrek.data.DataDevices
-import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.data.WifiConfiguration
+import com.example.innotrek.data.room.DatabaseProvider
+import com.example.innotrek.data.room.WifiConfiguration
 import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.terminal.TerminalContent
+import com.example.innotrek.ui.screens.common.TopAppBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,14 +33,14 @@ fun TerminalScreen(navController: NavController) {
     ) {
         Scaffold(
             topBar = {
-                com.example.innotrek.ui.components.common.TopAppBar(
+                TopAppBar(
                     title = "Terminal",
                     onMenuClick = { scope.launch { drawerState.open() } },
                 )
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                TerminalContent(navController)
+                TerminalContent()
             }
         }
     }

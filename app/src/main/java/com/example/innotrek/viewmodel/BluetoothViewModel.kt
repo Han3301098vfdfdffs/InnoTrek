@@ -19,7 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.UUID
 
@@ -34,6 +39,9 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     val bluetoothEnabled = mutableStateOf(false)
     val connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
 
+
+    private var readThread: Thread? = null
+
     // UUID para SPP (Serial Port Profile)
     private val sppUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
@@ -47,8 +55,40 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         data class Error(val message: String) : ConnectionState()
     }
 
+    private val _receivedMessages = MutableStateFlow<List<String>>(emptyList())
+    val receivedMessages: StateFlow<List<String>> = _receivedMessages.asStateFlow()
 
 
+    private fun startReadingThread(socket: BluetoothSocket) {
+        readThread?.interrupt()
+        readThread = Thread {
+            try {
+                val inputStream = socket.inputStream
+                val buffer = ByteArray(1024)
+                var bytes: Int
+                var remainingMessage = ""
+
+                while (!Thread.interrupted()) {
+                    bytes = inputStream.read(buffer)
+                    val rawMessage = remainingMessage + String(buffer, 0, bytes)
+
+                    // Procesar cada línea completa
+                    val messages = rawMessage.split("\n")
+                    remainingMessage = if (rawMessage.endsWith("\n")) "" else messages.last()
+
+                    val completeMessages = messages.dropLast(if (remainingMessage.isEmpty()) 0 else 1)
+                    if (completeMessages.isNotEmpty()) {
+                        viewModelScope.launch {
+                            _receivedMessages.value = _receivedMessages.value + completeMessages
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                Log.e("BluetoothViewModel", "Error en hilo de lectura: ${e.message}")
+                handleError("Error de lectura: ${e.message}")
+            }
+        }.apply { start() }
+    }
     // Función para conectar a un dispositivo por dirección MAC
     fun connectToDeviceByMac(context: Context, macAddress: String) {
         if (!hasBluetoothPermissions(context)) {
@@ -95,6 +135,7 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
                     socket.connect()
                     connectionState.value = ConnectionState.Connected
                     Log.d("BluetoothViewModel", "Conectado a ${device.name ?: "dispositivo desconocido"}")
+                    startReadingThread(socket)
                 } catch (e: IOException) {
                     Log.e("BluetoothViewModel", "Error al conectar: ${e.message}")
                     connectionState.value = ConnectionState.Error("Error de conexión: ${e.message}")
@@ -115,8 +156,18 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+
+
+    private fun handleError(message: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            connectionState.value = ConnectionState.Error(message)
+        }
+    }
+
     // Función para desconectar
     fun disconnect() {
+        readThread?.interrupt()
+        readThread = null
         try {
             bluetoothSocket?.close()
             connectionState.value = ConnectionState.Disconnected

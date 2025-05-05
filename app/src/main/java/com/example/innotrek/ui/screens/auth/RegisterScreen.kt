@@ -25,13 +25,13 @@ import androidx.navigation.NavController
 import com.example.innotrek.R
 import com.example.innotrek.navigation.AppScreens
 import com.example.innotrek.ui.utils.composables.responsiveTextSize
-import com.example.innotrek.ui.components.auth.AuthButton
-import com.example.innotrek.ui.components.auth.AuthDialog
-import com.example.innotrek.ui.components.auth.AuthFooter
-import com.example.innotrek.ui.components.auth.AuthHeader
-import com.example.innotrek.ui.components.auth.AuthTextField
-import com.example.innotrek.ui.components.common.BackButton
-import com.example.innotrek.ui.components.common.LogoImage
+import com.example.innotrek.ui.screens.auth.components.AuthButton
+import com.example.innotrek.ui.screens.auth.components.AuthDialog
+import com.example.innotrek.ui.screens.auth.components.AuthFooter
+import com.example.innotrek.ui.screens.auth.components.AuthHeader
+import com.example.innotrek.ui.screens.auth.components.AuthTextField
+import com.example.innotrek.ui.screens.common.BackButton
+import com.example.innotrek.ui.screens.common.LogoImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.innotrek.viewmodel.RegisterViewModel
 

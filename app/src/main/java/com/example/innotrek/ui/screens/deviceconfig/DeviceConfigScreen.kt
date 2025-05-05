@@ -15,8 +15,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.common.TopAppBar
-import com.example.innotrek.ui.components.deviceconfig.DeviceConfigContent
+import com.example.innotrek.ui.screens.common.TopAppBar
+import com.example.innotrek.ui.screens.deviceconfig.components.DeviceConfigContent
 import com.example.innotrek.viewmodel.BluetoothViewModel
 import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import kotlinx.coroutines.launch
