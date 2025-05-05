@@ -5,5 +5,5 @@ import androidx.navigation.NavController
 
 @Composable
 fun TerminalContent(navController: NavController){
-    BarTerminal(navController)
+    BarTerminal()
 }

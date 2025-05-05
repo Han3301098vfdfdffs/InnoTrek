@@ -22,16 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.innotrek.R
 import com.example.innotrek.ui.components.device.ConnectionScreen
 import com.example.innotrek.ui.screens.terminal.bluetooth.BluetoothTerminalScreen
 import com.example.innotrek.ui.screens.terminal.wifi.WifiTerminalScreen
-import com.example.innotrek.viewmodel.BluetoothViewModel
 import com.example.innotrek.viewmodel.TerminalViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
