@@ -1,8 +1,8 @@
-package com.example.innotrek.ui.components.terminal
-
-
+package com.example.innotrek.ui.screens.terminal
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,13 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.innotrek.R
-import com.example.innotrek.data.DatabaseProvider
-import com.example.innotrek.data.WifiConfiguration
 import com.example.innotrek.ui.components.device.ConnectionScreen
-import com.example.innotrek.ui.components.terminal.bluetooth.BluetoothTerminal
-import com.example.innotrek.ui.components.terminal.wifi.WifiConnectionState
-import com.example.innotrek.ui.components.terminal.wifi.WifiTerminal
+import com.example.innotrek.ui.screens.terminal.bluetooth.BluetoothTerminalScreen
+import com.example.innotrek.ui.screens.terminal.wifi.WifiTerminalScreen
 import com.example.innotrek.viewmodel.BluetoothViewModel
+import com.example.innotrek.viewmodel.TerminalViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -42,39 +40,28 @@ fun BarTerminal(navController: NavController) {
     var activeScreen by remember { mutableStateOf(ConnectionScreen.WIFI) }
     val context = LocalContext.current
     val bluetoothViewModel: BluetoothViewModel = viewModel()
+    val terminalViewModel: TerminalViewModel = viewModel()
 
-    // 1. Estado de la conexión WiFi (inicialmente desconectado)
-    var wifiState by remember { mutableStateOf<WifiConnectionState>(WifiConnectionState.Disconnected) }
-
-    // 2. Dispositivo seleccionado (inicialmente nulo)
-    var selectedDevice by remember { mutableStateOf<WifiConfiguration?>(null) }
-
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Permiso concedido, puedes realizar acciones relacionadas con Bluetooth
+        } else {
+            // Permiso denegado, manejar según sea necesario
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         when (activeScreen) {
             ConnectionScreen.WIFI -> {
-                WifiTerminal(
-                    connectionState = wifiState, // Estado actual de la conexión
-                    onDeviceSelected = { device ->
-                        selectedDevice = device // Guarda el dispositivo seleccionado
-                    },
-                    onConnectClicked = {
-                        // Lógica para conectar (simulada o real)
-                        wifiState = WifiConnectionState.Connecting // Cambia a "Conectando..."
-                    }
-                )
+                WifiTerminalScreen(viewModel = terminalViewModel)
             }
             ConnectionScreen.BLUETOOTH -> {
-                BluetoothTerminal(
-                    connectionState = bluetoothViewModel.connectionState.value,
-                    onDeviceSelected = { device ->
-                        bluetoothViewModel.selectedDeviceAddress.value = device.direccionMac
-                    },
-                    onConnectClicked = {
-                        bluetoothViewModel.selectedDeviceAddress.value?.let { mac ->
-                            bluetoothViewModel.connectToDeviceByMac(context, mac)
-                        }
+                BluetoothTerminalScreen(
+                    requestPermission = { permission ->
+                        requestPermissionLauncher.launch(permission)
                     }
-                )
+                    )
             }
         }
 

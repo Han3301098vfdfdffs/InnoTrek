@@ -1,4 +1,4 @@
-package com.example.innotrek.ui.components.terminal
+package com.example.innotrek.ui.screens.terminal
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

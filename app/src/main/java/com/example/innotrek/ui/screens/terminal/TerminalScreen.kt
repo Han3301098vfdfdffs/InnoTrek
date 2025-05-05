@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.innotrek.navigation.NavigationDrawerContent
-import com.example.innotrek.ui.components.terminal.TerminalContent
 import kotlinx.coroutines.launch
 
 @Composable
