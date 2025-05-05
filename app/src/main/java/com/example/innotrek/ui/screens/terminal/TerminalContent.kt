@@ -4,6 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun TerminalContent(navController: NavController){
+fun TerminalContent(){
     BarTerminal()
 }
