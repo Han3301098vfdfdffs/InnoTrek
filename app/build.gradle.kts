@@ -81,6 +81,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("androidx.credentials:credentials:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    implementation("androidx.activity:activity-compose:1.10.1")
 
     //Bluetooth
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
