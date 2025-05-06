@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,35 +32,43 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.innotrek.R
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.Identity
+import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 
 @Composable
 fun GoogleLoginButton(
     isLandscape: Boolean,
     onSignInSuccess: () -> Unit,
     onSignInFailure: (Exception) -> Unit
-    ){
-
+) {
     val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
-
-    // Estado para controlar si hay un error
+    val auth = Firebase.auth
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Lanzador para el resultado de la actividad de inicio de sesión de Google
+    // Nuevo: Usar el cliente de Identity Services
+    val oneTapClient = remember { Identity.getSignInClient(context) }
+
     val googleSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
         try {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            val account = task.getResult(ApiException::class.java)
-            firebaseAuthWithGoogle(account.idToken!!, auth, onSignInSuccess, onSignInFailure)
-        } catch (e: ApiException) {
-            errorMessage = "Error al iniciar sesión con Google: ${e.message}"
+            val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
+            val googleIdToken = credential.googleIdToken
+            when {
+                googleIdToken != null -> {
+                    firebaseAuthWithGoogle(googleIdToken, auth, onSignInSuccess, onSignInFailure)
+                }
+                else -> onSignInFailure(Exception("No se encontró token de Google"))
+            }
+        } catch (e: Exception) {
             onSignInFailure(e)
         }
     }
@@ -67,10 +76,10 @@ fun GoogleLoginButton(
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
-    ){
+    ) {
         Box(
             modifier = Modifier
-                .size(if(isLandscape) 128.dp else 64.dp)
+                .size(if (isLandscape) 128.dp else 64.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .border(
                     width = 2.dp,
@@ -78,11 +87,8 @@ fun GoogleLoginButton(
                     shape = RoundedCornerShape(20.dp)
                 )
                 .background(Color.White)
-                .clickable {
-                    signInWithGoogle(context , googleSignInLauncher)
-                    /*Logica para iniciar sesión con Google*/
-                }
-                .padding(12.dp), // Espacio interno para que no se pegue
+                .clickable { signInWithGoogle(oneTapClient, googleSignInLauncher) }
+                .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -95,15 +101,31 @@ fun GoogleLoginButton(
 }
 
 private fun signInWithGoogle(
-    context: Context,
-    launcher: ActivityResultLauncher<Intent>
+    oneTapClient: SignInClient,
+    launcher: ActivityResultLauncher<IntentSenderRequest>
 ) {
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com")
-        .requestEmail()
+    val signInRequest = BeginSignInRequest.builder()
+        .setGoogleIdTokenRequestOptions(
+            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setSupported(true)
+                .setServerClientId("935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com")
+                .setFilterByAuthorizedAccounts(false)
+                .build()
+        )
+        .setAutoSelectEnabled(true)
         .build()
-    val googleSignInClient = GoogleSignIn.getClient(context, gso)
-    launcher.launch(googleSignInClient.signInIntent)
+
+    oneTapClient.beginSignIn(signInRequest)
+        .addOnSuccessListener { result ->
+            launcher.launch(
+                IntentSenderRequest.Builder(
+                    result.pendingIntent.intentSender
+                ).build()
+            )
+        }
+        .addOnFailureListener { exception ->
+            // Manejar error
+        }
 }
 
 private fun firebaseAuthWithGoogle(
