@@ -56,6 +56,9 @@ dependencies {
     //SplashScreen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
+    //ViewModels
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
     implementation("androidx.compose.material3:material3:1.4.0-alpha10")
     implementation("androidx.compose.material3:material3:1.3.2")
 
@@ -80,16 +83,16 @@ dependencies {
     //Auth Google
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("androidx.activity:activity-compose:1.10.1")
 
     //Bluetooth
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     implementation("androidx.bluetooth:bluetooth:1.0.0-alpha02") // Librería oficial en desarrollo
 
     // Room
-    val room_version = "2.6.1"
+    val room_version = "2.7.1"
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     kapt("androidx.room:room-compiler:$room_version")
