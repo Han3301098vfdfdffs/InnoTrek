@@ -20,7 +20,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,7 +31,7 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     // Estados existentes
     val devices = mutableStateListOf<String>()
     val pairedDevices = mutableStateListOf<String>()
-    val isDeviceSelected = mutableStateOf(false)
+    private val isDeviceSelected = mutableStateOf(false)
     val selectedDeviceName = mutableStateOf<String?>(null)
     val selectedDeviceAddress = mutableStateOf<String?>(null)
     val selectedDevice = mutableStateOf<String?>(null)
@@ -49,43 +48,33 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
     private var bluetoothSocket: BluetoothSocket? = null
 
     sealed class ConnectionState {
-        object Disconnected : ConnectionState()
-        object Connecting : ConnectionState()
-        object Connected : ConnectionState()
+        data object Disconnected : ConnectionState()
+        data object Connecting : ConnectionState()
+        data object Connected : ConnectionState()
         data class Error(val message: String) : ConnectionState()
     }
 
-    private val _receivedMessages = MutableStateFlow<List<String>>(emptyList())
-    val receivedMessages: StateFlow<List<String>> = _receivedMessages.asStateFlow()
-
+        private val _receivedMessages = MutableStateFlow<List<String>>(emptyList())
+        val receivedMessages: StateFlow<List<String>> = _receivedMessages.asStateFlow()
 
     private fun startReadingThread(socket: BluetoothSocket) {
-        readThread?.interrupt()
         readThread = Thread {
             try {
-                val inputStream = socket.inputStream
-                val buffer = ByteArray(1024)
-                var bytes: Int
-                var remainingMessage = ""
-
+                val reader = socket.inputStream.bufferedReader()
                 while (!Thread.interrupted()) {
-                    bytes = inputStream.read(buffer)
-                    val rawMessage = remainingMessage + String(buffer, 0, bytes)
+                    val line = reader.readLine()?.trim() // Elimina espacios y saltos de línea
 
-                    // Procesar cada línea completa
-                    val messages = rawMessage.split("\n")
-                    remainingMessage = if (rawMessage.endsWith("\n")) "" else messages.last()
-
-                    val completeMessages = messages.dropLast(if (remainingMessage.isEmpty()) 0 else 1)
-                    if (completeMessages.isNotEmpty()) {
+                    // Si la línea NO está vacía, la procesamos
+                    if (!line.isNullOrEmpty()) {  // Usamos isNullOrEmpty() para mayor precisión
                         viewModelScope.launch {
-                            _receivedMessages.value = _receivedMessages.value + completeMessages
+                            // Agregamos la línea al estado sin saltos innecesarios
+                            _receivedMessages.value += line
                         }
                     }
+                    // Si la línea está vacía, simplemente la ignoramos (no se agrega al estado)
                 }
             } catch (e: IOException) {
-                Log.e("BluetoothViewModel", "Error en hilo de lectura: ${e.message}")
-                handleError("Error de lectura: ${e.message}")
+                Log.e("Bluetooth", "Error en la lectura: ${e.message}")
             }
         }.apply { start() }
     }
@@ -153,14 +142,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
             connectionState.value = ConnectionState.Error("Dirección MAC inválida")
         } catch (e: Exception) {
             connectionState.value = ConnectionState.Error("Error inesperado: ${e.message}")
-        }
-    }
-
-
-
-    private fun handleError(message: String) {
-        viewModelScope.launch(Dispatchers.Main) {
-            connectionState.value = ConnectionState.Error(message)
         }
     }
 

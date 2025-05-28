@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 
 @Composable
 fun EmailField(

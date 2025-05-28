@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.innotrek.navigation.AppScreens
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 
 @Composable
 fun SignUpPrompt(navController: NavController) {

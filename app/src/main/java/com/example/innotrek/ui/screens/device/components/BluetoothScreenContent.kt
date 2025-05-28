@@ -36,7 +36,6 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun BluetoothScreenContent(
-    modifier: Modifier = Modifier,
     database: AppDatabase,
     onDelete: () -> Unit = {},
     onAddDevice: () -> Unit

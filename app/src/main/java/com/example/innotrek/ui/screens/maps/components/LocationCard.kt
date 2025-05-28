@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.innotrek.R
 import com.example.innotrek.data.model.Stores
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 import com.example.innotrek.ui.utils.getStoreNameFromResource
 import com.google.android.gms.maps.model.LatLng
 

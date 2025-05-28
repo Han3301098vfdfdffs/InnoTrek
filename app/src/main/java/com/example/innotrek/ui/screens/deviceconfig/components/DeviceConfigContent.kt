@@ -58,10 +58,6 @@ fun DeviceConfigContent() {
         DeviceConfigImageCarousel(
             devices = devices,
             selectedDeviceIndex = deviceConfigViewModel.selectedDeviceIndex,
-            onDeviceSelected = {
-                deviceConfigViewModel.selectDevice(it)
-                showDeviceNotSelectedWarning.value = false
-            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))

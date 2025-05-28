@@ -34,7 +34,6 @@ import kotlinx.coroutines.launch
 fun DeviceConfigImageCarousel(
     devices: List<Device>,
     selectedDeviceIndex: Int,
-    onDeviceSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val configuration = LocalConfiguration.current

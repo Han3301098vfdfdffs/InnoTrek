@@ -40,7 +40,7 @@ fun TerminalScreen(navController: NavController) {
             }
         ) { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                TerminalContent()
+                BarTerminal()
             }
         }
     }

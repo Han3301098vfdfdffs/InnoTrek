@@ -1,3 +1,5 @@
+package com.example.innotrek.ui.screens.maps.components
+
 import android.Manifest
 import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -83,7 +85,7 @@ fun LocationFAB(
                                 )
                             }
                         },
-                        onFailure = { e ->
+                        onFailure = {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     "Error de seguridad al acceder a la ubicación",
