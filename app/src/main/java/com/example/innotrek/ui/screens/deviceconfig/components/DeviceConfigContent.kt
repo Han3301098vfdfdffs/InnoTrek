@@ -32,7 +32,6 @@ import com.example.innotrek.viewmodel.DeviceConfigViewModel
 import com.example.innotrek.ui.screens.deviceconfig.wifi.WifiConnectionContent
 import com.example.innotrek.viewmodel.BluetoothViewModel
 
-
 @Composable
 fun DeviceConfigContent() {
     val devices = DataDevices().loadDevices() // Obtén la lista de dispositivos

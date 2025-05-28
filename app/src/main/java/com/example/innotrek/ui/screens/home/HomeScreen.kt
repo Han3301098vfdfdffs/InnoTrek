@@ -36,7 +36,7 @@ fun HomeScreen(navController: NavController) {
                 modifier = Modifier.padding(padding)
             ) {
                 // Aquí iría el contenido real de tu pantalla
-                Text("Contenido principal")
+                Text("Bienvenidos a InnoTrek\nSeguimos trabajando en los tutoriales")
             }
         }
     }
