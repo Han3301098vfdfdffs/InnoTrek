@@ -10,7 +10,6 @@ import com.example.innotrek.ui.screens.login.LoginScreen
 import com.example.innotrek.ui.screens.home.HomeScreen
 import com.example.innotrek.ui.screens.auth.RegisterScreen
 import com.example.innotrek.ui.screens.device.DeviceScreen
-import com.example.innotrek.ui.screens.graphs.GraphScreen
 import com.example.innotrek.ui.screens.terminal.TerminalScreen
 
 @Composable
@@ -41,9 +40,6 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.TerminalScreen.route) {
             TerminalScreen(navController)
-        }
-        composable(route = AppScreens.GraphScreen.route) {
-            GraphScreen(navController)
         }
     }
 }

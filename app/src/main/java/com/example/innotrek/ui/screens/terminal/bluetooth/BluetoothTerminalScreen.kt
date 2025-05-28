@@ -28,7 +28,7 @@ import com.example.innotrek.data.room.BluetoothConfiguration
 import com.example.innotrek.data.room.DatabaseProvider
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.rememberBluetoothPermissionLauncher
 import com.example.innotrek.ui.screens.deviceconfig.bluetooth.scanBluetoothPermissionLauncher
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 import com.example.innotrek.viewmodel.BluetoothViewModel
 import com.example.innotrek.viewmodel.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +42,6 @@ fun BluetoothTerminalScreen(
 ) {
 
     val scrollState = rememberScrollState()
-    var showSaveDialog by remember { mutableStateOf(false) }
     var showDeviceDialog by remember { mutableStateOf(false) }
     var selectedDevice by remember { mutableStateOf<BluetoothConfiguration?>(null) }
     val bluetoothViewModel: BluetoothViewModel = viewModel()
@@ -54,7 +53,7 @@ fun BluetoothTerminalScreen(
 
 
     // Obtener dispositivos Bluetooth guardados
-    val bluetoothDevices by produceState<List<BluetoothConfiguration>>(
+    val bluetoothDevices by produceState(
         initialValue = emptyList(),
         key1 = showDeviceDialog
     ) {
@@ -192,20 +191,6 @@ fun BluetoothTerminalScreen(
             ) {
                 Text(
                     text = "Limpiar\nTerminal",
-                    fontSize = responsiveTextSize(14.sp, 22.sp)
-                )
-            }
-
-            Button(
-                onClick = { showSaveDialog = true },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.azul_fondo),
-                    contentColor = colorResource(id = R.color.white)
-                ),
-                modifier = Modifier.width(150.dp)
-            ) {
-                Text(
-                    text = "Guardar\nTerminal",
                     fontSize = responsiveTextSize(14.sp, 22.sp)
                 )
             }

@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.example.innotrek.data.model.Device
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

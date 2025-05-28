@@ -3,9 +3,9 @@ package com.example.innotrek.data
 import com.example.innotrek.R
 import com.example.innotrek.data.model.Device
 
-class DataDevices(){
+class DataDevices{
     fun loadDevices(): List<Device>{
-        return listOf<Device>(
+        return listOf(
             Device(R.string.Device_00, R.drawable.device_00_arduino_mega_2560),
             Device(R.string.Device_01, R.drawable.device_01_arduino_uno_nano),
             Device(R.string.Device_02, R.drawable.device_02_arduino_uno_r3),

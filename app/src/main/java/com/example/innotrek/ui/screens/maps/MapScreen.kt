@@ -1,6 +1,5 @@
 package com.example.innotrek.ui.screens.maps
 
-import LocationFAB
 import android.content.res.Configuration
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
@@ -18,6 +17,7 @@ import com.example.innotrek.data.DataMaps
 import com.example.innotrek.ui.screens.maps.components.MapContent
 import com.example.innotrek.navigation.NavigationDrawerContent
 import com.example.innotrek.ui.screens.common.TopAppBar
+import com.example.innotrek.ui.screens.maps.components.LocationFAB
 import com.example.innotrek.viewmodel.MapViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng

@@ -1,10 +1,8 @@
 package com.example.innotrek.ui.screens.login.components
 
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,51 +15,45 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.credentials.exceptions.NoCredentialException
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.innotrek.R
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
+import com.example.innotrek.ui.utils.GoogleAuthHelper
+import com.example.innotrek.ui.utils.ResultGoogle
+import com.example.innotrek.viewmodel.GoogleViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun GoogleLoginButton(
-    isLandscape: Boolean,
-    onSignInSuccess: () -> Unit,
-    onSignInFailure: (Exception) -> Unit
+    navController: NavController,
+    viewModel: GoogleViewModel = viewModel(),
+    onSuccess: () -> Unit = { navController.navigate("home_screen") }
 ) {
+    val loading by viewModel.loading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
     val context = LocalContext.current
-    val auth = Firebase.auth
+    val coroutineScope = rememberCoroutineScope()
 
-    // Nuevo: Usar el cliente de Identity Services
-    val oneTapClient = remember { Identity.getSignInClient(context) }
-
-    val googleSignInLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        try {
-            val credential = oneTapClient.getSignInCredentialFromIntent(result.data)
-            val googleIdToken = credential.googleIdToken
-            when {
-                googleIdToken != null -> {
-                    firebaseAuthWithGoogle(googleIdToken, auth, onSignInSuccess, onSignInFailure)
-                }
-                else -> onSignInFailure(Exception("No se encontró token de Google"))
-            }
-        } catch (e: Exception) {
-            onSignInFailure(e)
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearErrorMessage()
         }
     }
 
@@ -71,68 +63,73 @@ fun GoogleLoginButton(
     ) {
         Box(
             modifier = Modifier
-                .size(if (isLandscape) 128.dp else 64.dp)
+                .size(64.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .border(
                     width = 2.dp,
-                    color = colorResource(id = R.color.azul_fondo),
+                    color = Color.White,
                     shape = RoundedCornerShape(20.dp)
                 )
                 .background(Color.White)
-                .clickable { signInWithGoogle(oneTapClient, googleSignInLauncher) }
+                .clickable(
+                    enabled = !loading,
+                    onClick = {
+                        if (context !is Activity) {
+                            Toast.makeText(context, "Se requiere una Activity", Toast.LENGTH_SHORT).show()
+                            return@clickable
+                        }
+                        coroutineScope.launch(Dispatchers.IO) {
+                            val googleAuthHelper = GoogleAuthHelper(context)
+
+                            when (val result = googleAuthHelper.signInWithGoogle(
+                                clientId = context.getString(R.string.default_web_client_id)
+                            )) {
+                                is ResultGoogle.Success -> {
+                                    val token = result.value // <- Aquí faltaba completar la línea
+                                    viewModel.setGoogleIdToken(token)
+                                    when (val authResult = viewModel.signInWithFirebase()) {
+                                        is ResultGoogle.Success -> {
+                                            withContext(Dispatchers.Main) { // Vuelve a Main para navegar
+                                                onSuccess()
+                                            }
+                                        }
+                                        is ResultGoogle.Failure -> {
+                                            withContext(Dispatchers.Main) {
+                                                Toast.makeText(
+                                                    context,
+                                                    "Error en Firebase: ${authResult.exception.message}",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                    }
+                                }
+                                is ResultGoogle.Failure -> {
+                                    withContext(Dispatchers.Main) {
+                                        val errorMsg = when (result.exception) {
+                                            is NoCredentialException -> "Selección de cuenta cancelada"
+                                            else -> "Error en Google: ${result.exception.message}"
+                                        }
+                                        Toast.makeText(context, errorMsg, Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                )
                 .padding(12.dp),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.icons8_logo_de_google_240),
-                contentDescription = "Sign in with Google",
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-}
-
-private fun signInWithGoogle(
-    oneTapClient: SignInClient,
-    launcher: ActivityResultLauncher<IntentSenderRequest>
-) {
-    val signInRequest = BeginSignInRequest.builder()
-        .setGoogleIdTokenRequestOptions(
-            BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                .setSupported(true)
-                .setServerClientId("935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com")
-                .setFilterByAuthorizedAccounts(false)
-                .build()
-        )
-        .setAutoSelectEnabled(true)
-        .build()
-
-    oneTapClient.beginSignIn(signInRequest)
-        .addOnSuccessListener { result ->
-            launcher.launch(
-                IntentSenderRequest.Builder(
-                    result.pendingIntent.intentSender
-                ).build()
-            )
-        }
-        .addOnFailureListener { exception ->
-            // Manejar error
-        }
-}
-
-private fun firebaseAuthWithGoogle(
-    idToken: String,
-    auth: FirebaseAuth,
-    onSuccess: () -> Unit,
-    onFailure: (Exception) -> Unit
-) {
-    val credential = GoogleAuthProvider.getCredential(idToken, null)
-    auth.signInWithCredential(credential)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                onSuccess()
+            if (loading) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
             } else {
-                task.exception?.let(onFailure)
+                Image(
+                    painter = painterResource(id = R.drawable.icons8_logo_de_google_240),
+                    contentDescription = "Sign in with Google",
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
+    }
 }

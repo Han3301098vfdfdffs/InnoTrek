@@ -56,8 +56,8 @@ dependencies {
     //SplashScreen
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    //ViewModels
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+        //ViewModels
+        implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
     implementation("androidx.compose.material3:material3:1.4.0-alpha10")
     implementation("androidx.compose.material3:material3:1.3.2")

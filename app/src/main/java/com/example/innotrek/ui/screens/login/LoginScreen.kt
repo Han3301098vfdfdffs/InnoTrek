@@ -1,7 +1,6 @@
 package com.example.innotrek.ui.screens.login
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,7 +30,6 @@ import com.example.innotrek.viewmodel.LoginViewModel
 fun LoginScreen(navController: NavController) {
     val viewModel: LoginViewModel = viewModel()
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val context = LocalContext.current
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,14 +57,11 @@ fun LoginScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
 
             GoogleLoginButton(
-                isLandscape = isLandscape,
-                onSignInSuccess = {
+                navController = navController,
+                onSuccess = {
                     navController.navigate("home_screen") {
-                        popUpTo("login_screen") {inclusive = true}
+                        popUpTo("login_screen") { inclusive = true }
                     }
-                },
-                onSignInFailure = {exception ->
-                    Toast.makeText(context, "Errror: ${exception.message}",Toast.LENGTH_SHORT).show()
                 }
             )
 

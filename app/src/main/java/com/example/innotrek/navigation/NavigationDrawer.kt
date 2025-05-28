@@ -26,7 +26,6 @@ fun NavigationDrawerContent(
         AppScreens.DeviceScreen to "Dispositivos",
         AppScreens.DeviceConfigScreen to "Configuración Dispositivo",
         AppScreens.TerminalScreen to "Terminal",
-        AppScreens.GraphScreen to "Gráficas"
     )
 
     ModalDrawerSheet {

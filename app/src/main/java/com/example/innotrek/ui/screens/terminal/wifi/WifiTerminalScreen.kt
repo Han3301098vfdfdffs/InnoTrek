@@ -22,7 +22,7 @@ import com.example.innotrek.R
 import com.example.innotrek.data.room.DatabaseProvider
 import com.example.innotrek.data.room.WifiConfiguration
 import com.example.innotrek.ui.screens.terminal.TcpClient
-import com.example.innotrek.ui.utils.composables.responsiveTextSize
+import com.example.innotrek.ui.utils.responsiveTextSize
 import com.example.innotrek.viewmodel.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,13 +33,12 @@ fun WifiTerminalScreen(viewModel: TerminalViewModel) {
     val messages by viewModel.messages.collectAsState()
     val scrollState = rememberScrollState()
     val context =  LocalContext.current
-    var showSaveDialog by remember { mutableStateOf(false) }
     var showDeviceDialog by remember { mutableStateOf(false) }
     var selectedDevice by remember { mutableStateOf<WifiConfiguration?>(null) }
     val terminalViewModel: TerminalViewModel = viewModel()
 
     // Obtener dispositivos WiFi
-    val wifiDevices by produceState<List<WifiConfiguration>>(
+    val wifiDevices by produceState(
         initialValue = emptyList(),
         key1 = showDeviceDialog
     ) {
@@ -142,20 +141,6 @@ fun WifiTerminalScreen(viewModel: TerminalViewModel) {
             ) {
                 Text(
                     text = "Limpiar\nTerminal",
-                    fontSize = responsiveTextSize(14.sp, 22.sp)
-                )
-            }
-
-            Button(
-                onClick = { showSaveDialog = true },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.azul_fondo),
-                    contentColor = colorResource(id = R.color.white)
-                ),
-                modifier = Modifier.width(150.dp)
-            ) {
-                Text(
-                    text = "Guardar\nTerminal",
                     fontSize = responsiveTextSize(14.sp, 22.sp)
                 )
             }

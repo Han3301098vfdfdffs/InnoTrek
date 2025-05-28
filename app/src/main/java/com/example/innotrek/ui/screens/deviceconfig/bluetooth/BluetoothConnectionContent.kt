@@ -66,7 +66,9 @@ fun BluetoothConnectionContent() {
         bluetoothViewModel.checkBluetoothState(context)
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp)
+    ) {
 
         // Botón para activar Bluetooth
         Button(

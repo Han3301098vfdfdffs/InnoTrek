@@ -39,10 +39,7 @@ fun BarTerminal() {
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-        } else {
-        }
+    ) {
     }
     Box(modifier = Modifier.fillMaxSize()) {
         when (activeScreen) {
@@ -54,10 +51,9 @@ fun BarTerminal() {
                     requestPermission = { permission ->
                         requestPermissionLauncher.launch(permission)
                     }
-                    )
+                )
             }
         }
-
         BottomConnectionBar(
             activeScreen = activeScreen,
             onWifiClick = { activeScreen = ConnectionScreen.WIFI },
