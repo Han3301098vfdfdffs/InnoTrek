@@ -28,7 +28,7 @@ import java.io.IOException
 import java.util.UUID
 
 class BluetoothViewModel(application: Application) : AndroidViewModel(application) {
-    // Estados existentes
+
     val devices = mutableStateListOf<String>()
     val pairedDevices = mutableStateListOf<String>()
     private val isDeviceSelected = mutableStateOf(false)
@@ -41,10 +41,8 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var readThread: Thread? = null
 
-    // UUID para SPP (Serial Port Profile)
     private val sppUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
-    // Socket y estado de conexión
     private var bluetoothSocket: BluetoothSocket? = null
 
     sealed class ConnectionState {
@@ -62,23 +60,20 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
             try {
                 val reader = socket.inputStream.bufferedReader()
                 while (!Thread.interrupted()) {
-                    val line = reader.readLine()?.trim() // Elimina espacios y saltos de línea
+                    val line = reader.readLine()?.trim()
 
-                    // Si la línea NO está vacía, la procesamos
-                    if (!line.isNullOrEmpty()) {  // Usamos isNullOrEmpty() para mayor precisión
+                    if (!line.isNullOrEmpty()) {
                         viewModelScope.launch {
-                            // Agregamos la línea al estado sin saltos innecesarios
                             _receivedMessages.value += line
                         }
                     }
-                    // Si la línea está vacía, simplemente la ignoramos (no se agrega al estado)
                 }
             } catch (e: IOException) {
                 Log.e("Bluetooth", "Error en la lectura: ${e.message}")
             }
         }.apply { start() }
     }
-    // Función para conectar a un dispositivo por dirección MAC
+
     fun connectToDeviceByMac(context: Context, macAddress: String) {
         if (!hasBluetoothPermissions(context)) {
             connectionState.value = ConnectionState.Error("Permisos de Bluetooth no concedidos")
@@ -98,7 +93,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         connectionState.value = ConnectionState.Connecting
 
         try {
-            // Obtener el dispositivo Bluetooth por su dirección MAC
             val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     bluetoothAdapter.getRemoteDevice(macAddress)
@@ -111,14 +105,11 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
                 bluetoothAdapter.getRemoteDevice(macAddress)
             }
 
-            // Crear un socket seguro RFCOMM
             val socket = device.createRfcommSocketToServiceRecord(sppUUID)
             bluetoothSocket = socket
 
-            // Cancelar descubrimiento para mejorar la conexión
             bluetoothAdapter.cancelDiscovery()
 
-            // Conectar en un hilo separado para no bloquear la UI
             Thread {
                 try {
                     socket.connect()
@@ -145,7 +136,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    // Función para desconectar
     fun disconnect() {
         readThread?.interrupt()
         readThread = null
@@ -159,7 +149,6 @@ class BluetoothViewModel(application: Application) : AndroidViewModel(applicatio
         bluetoothSocket = null
     }
 
-    // Funciones existentes (se mantienen igual)
     fun selectDevice(deviceInfo: String) {
         val parts = deviceInfo.split(" - ")
         if (parts.size == 2) {
