@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.innotrek.ui.screens.maps.MapScreen
-import com.example.innotrek.ui.screens.deviceconfig.DeviceConfigScreen
-import com.example.innotrek.ui.screens.login.LoginScreen
-import com.example.innotrek.ui.screens.home.HomeScreen
-import com.example.innotrek.ui.screens.auth.RegisterScreen
-import com.example.innotrek.ui.screens.device.DeviceScreen
-import com.example.innotrek.ui.screens.terminal.TerminalScreen
+import com.example.innotrek.ui.screen.maps.MapScreen
+import com.example.innotrek.ui.screen.deviceconfig.DeviceConfigScreen
+import com.example.innotrek.ui.screen.login.LoginScreen
+import com.example.innotrek.ui.screen.home.HomeScreen
+import com.example.innotrek.ui.screen.auth.RegisterScreen
+import com.example.innotrek.ui.screen.device.DeviceScreen
+import com.example.innotrek.ui.screen.terminal.TerminalScreen
 
 @Composable
 fun AppNavigation() {
