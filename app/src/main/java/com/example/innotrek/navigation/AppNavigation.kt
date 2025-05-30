@@ -19,7 +19,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = AppScreens.TerminalScreen.route // ← Solo cambia esto
+        startDestination = AppScreens.LoginScreen.route // ← Solo cambia esto
     ) {
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController) // Pasa el navController
