@@ -26,7 +26,7 @@ class DeviceConfigViewModel : ViewModel() {
     var port by mutableStateOf(TextFieldValue(""))
         private set
 
-    val isBluetoothDeviceSelected = mutableStateOf(false) // Nuevo estado
+    private val isBluetoothDeviceSelected = mutableStateOf(false) // Nuevo estado
 
 
     fun selectDevice(index: Int) {

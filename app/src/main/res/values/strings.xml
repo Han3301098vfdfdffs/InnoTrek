@@ -25,4 +25,7 @@
     <string name="Device_05">ESP32 S3</string>
     <string name="Device_06">ESP32 WROOM 32</string>
     <string name="Device_07">Raspberry Pi Pico</string>
+
+    <string name="default_web_client_id">935999039311-dvs4f7e5kltpcc6sc1s2eg94vctj6boj.apps.googleusercontent.com</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 </resources>
